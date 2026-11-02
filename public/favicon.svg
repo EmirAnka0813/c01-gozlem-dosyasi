@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" fill="#04070a"/>
+  <rect x="6" y="10" width="52" height="38" fill="none" stroke="#ffb454" stroke-width="2"/>
+  <path d="M22 20 L42 29 L22 38 Z" fill="#ffb454" opacity=".85"/>
+  <text x="32" y="57" font-family="monospace" font-size="9" fill="#5ef2a0" text-anchor="middle" letter-spacing="2">C-01</text>
+</svg>

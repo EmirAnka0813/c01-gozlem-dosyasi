@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>C-01 / ÇINAR ULAŞIN — GÖZLEM DOSYASI</title>
+<meta name="description" content="Bir gözlem dosyası. Konu: C-01. Durum: açık.">
+<link rel="icon" href="public/favicon.svg" type="image/svg+xml">
+<style>
+/* ============================================================
+   C-01 GÖZLEM DOSYASI — sıfır CDN, tek dosya
+   ============================================================ */
+:root{
+  --bg:#04070a;
+  --bg2:#080d12;
+  --ink:#c9d6d9;
+  --dim:#6b7d84;
+  --amber:#ffb454;
+  --green:#5ef2a0;
+  --red:#ff5f56;
+  --violet:#a78bfa;
+  --line:rgba(255,180,84,.16);
+  --line2:rgba(94,242,160,.14);
+  --mono: ui-monospace, "Cascadia Mono", "JetBrains Mono", Consolas, "Courier New", monospace;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.65;
+  overflow-x:hidden;
+  min-height:100vh;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(1200px 700px at 50% -10%, rgba(255,180,84,.07), transparent 60%),
+    radial-gradient(900px 600px at 100% 100%, rgba(94,242,160,.05), transparent 60%),
+    linear-gradient(180deg,var(--bg) 0%, var(--bg2) 45%, var(--bg) 100%);
+}
+/* CRT katmanları */
+.scan{
+  position:fixed;inset:0;z-index:900;pointer-events:none;opacity:.55;
+  background:repeating-linear-gradient(180deg, rgba(0,0,0,0) 0 2px, rgba(0,0,0,.22) 2px 4px);
+  mix-blend-mode:multiply;
+}
+.vig{
+  position:fixed;inset:0;z-index:901;pointer-events:none;
+  box-shadow:inset 0 0 220px rgba(0,0,0,.9), inset 0 0 60px rgba(0,0,0,.5);
+}
+#noise{position:fixed;inset:0;z-index:899;pointer-events:none;opacity:.05;image-rendering:pixelated}
+.flick{position:fixed;inset:0;z-index:898;pointer-events:none;background:rgba(255,255,255,.02);animation:flick 6s infinite steps(1)}
+@keyframes flick{0%,96%{opacity:0}97%{opacity:.5}98%{opacity:0}99%{opacity:.35}100%{opacity:0}}
+
+::selection{background:rgba(255,180,84,.28);color:#fff}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-track{background:#05090c}
+::-webkit-scrollbar-thumb{background:#26343b;border-radius:0}
+::-webkit-scrollbar-thumb:hover{background:var(--amber)}
+
+.wrap{position:relative;z-index:2;max-width:1140px;margin:0 auto;padding:0 22px}
+
+/* ---------- BOOT ---------- */
+#boot{
+  position:fixed;inset:0;z-index:9999;background:#020406;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;
+  padding:24px;text-align:left;
+}
+#boot.gone{opacity:0;pointer-events:none;transition:opacity .7s ease}
+.bootbox{width:min(680px,92vw);font-size:13.5px;line-height:1.85}
+.bootbox .b{color:var(--dim)}
+.bootbox .g{color:var(--green)}
+.bootbox .a{color:var(--amber)}
+.bootbox .r{color:var(--red)}
+.cursor{display:inline-block;width:9px;height:15px;background:var(--green);vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{0%,50%{opacity:1}51%,100%{opacity:0}}
+#bootBtn{
+  margin-top:26px;background:transparent;color:var(--amber);border:1px solid rgba(255,180,84,.45);
+  padding:13px 26px;font-family:var(--mono);font-size:14px;letter-spacing:.22em;cursor:pointer;
+  transition:.25s;
+}
+#bootBtn:hover{background:rgba(255,180,84,.12);box-shadow:0 0 30px rgba(255,180,84,.22)}
+#bootBtn[disabled]{opacity:.35;cursor:default}
+
+/* ---------- TOPBAR ---------- */
+.topbar{
+  position:sticky;top:0;z-index:800;background:rgba(4,7,10,.86);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--line);
+  font-size:11.5px;letter-spacing:.1em;color:var(--dim);
+}
+.topbar .in{max-width:1140px;margin:0 auto;padding:9px 22px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.topbar .path{color:var(--amber);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:58%}
+.topbar .sp{flex:1}
+.tbtn{
+  background:transparent;border:1px solid var(--line);color:var(--dim);font-family:var(--mono);
+  font-size:11px;letter-spacing:.14em;padding:4px 10px;cursor:pointer;transition:.2s
+}
+.tbtn:hover{border-color:var(--amber);color:var(--amber)}
+.tbtn.on{border-color:var(--green);color:var(--green)}
+
+/* ---------- SECTIONS ---------- */
+section{position:relative;z-index:2}
+.sec-h{display:flex;align-items:center;gap:14px;margin:0 0 26px}
+.sec-h .n{font-size:11px;color:var(--amber);border:1px solid var(--line);padding:3px 9px;letter-spacing:.18em;white-space:nowrap}
+.sec-h .t{font-size:13px;letter-spacing:.34em;color:var(--ink);text-transform:uppercase}
+.sec-h .rule{flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
+.pad{padding:74px 0}
+
+/* ---------- HERO ---------- */
+.hero{min-height:100svh;display:flex;align-items:center;padding:60px 0 70px}
+.hero .kicker{
+  font-size:11px;letter-spacing:.32em;color:var(--dim);margin-bottom:20px;
+  display:flex;gap:10px;align-items:center;flex-wrap:wrap
+}
+.hero .kicker .dot{width:6px;height:6px;background:var(--green);border-radius:50%;box-shadow:0 0 10px var(--green);animation:pulse 1.9s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+.hero h1{
+  margin:0;font-size:clamp(2.1rem,8.2vw,5.9rem);line-height:.98;letter-spacing:-.03em;
+  font-weight:800;color:#eaf3f5;position:relative;word-break:break-word;
+}
+.hero h1 .g{display:inline-block;position:relative;color:var(--amber);text-shadow:0 0 26px rgba(255,180,84,.35)}
+.hero h1 .g::before,.hero h1 .g::after{
+  content:attr(data-t);position:absolute;left:0;top:0;width:100%;overflow:hidden;
+}
+.hero h1 .g::before{color:#ff2e6a;animation:gl1 5.5s infinite steps(2)}
+.hero h1 .g::after{color:#28c8ff;animation:gl2 5.5s infinite steps(2)}
+@keyframes gl1{0%,92%,100%{clip-path:inset(0 0 100% 0);transform:none}93%{clip-path:inset(6% 0 62% 0);transform:translate(-3px,0)}96%{clip-path:inset(42% 0 32% 0);transform:translate(3px,0)}}
+@keyframes gl2{0%,92%,100%{clip-path:inset(0 0 100% 0);transform:none}94%{clip-path:inset(30% 0 48% 0);transform:translate(3px,0)}97%{clip-path:inset(70% 0 12% 0);transform:translate(-3px,0)}}
+.hero .sub{margin:26px 0 0;max-width:640px;color:#9fb2b8;font-size:14.5px}
+.hero .sub em{color:var(--amber);font-style:normal}
+.chips{display:flex;gap:9px;flex-wrap:wrap;margin:26px 0 0}
+.chip{
+  font-size:11px;letter-spacing:.14em;border:1px solid var(--line);padding:6px 12px;color:var(--dim);
+  background:rgba(255,255,255,.015);
+}
+.chip.warn{border-color:rgba(255,95,86,.4);color:#ff9a94}
+.chip.ok{border-color:var(--line2);color:var(--green)}
+.chip b{color:var(--ink);font-weight:600}
+.hero .acts{display:flex;gap:12px;flex-wrap:wrap;margin-top:34px}
+.btn{
+  background:transparent;border:1px solid rgba(255,180,84,.45);color:var(--amber);
+  font-family:var(--mono);font-size:12.5px;letter-spacing:.2em;padding:13px 24px;cursor:pointer;transition:.25s
+}
+.btn:hover{background:rgba(255,180,84,.13);box-shadow:0 0 26px rgba(255,180,84,.2)}
+.btn.g{border-color:var(--line2);color:var(--green)}
+.btn.g:hover{background:rgba(94,242,160,.12);box-shadow:0 0 26px rgba(94,242,160,.18)}
+
+/* ---------- DOSYA ÖZETİ ---------- */
+.dossier{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.dcell{background:#060a0d;padding:20px 18px;position:relative;transition:.3s}
+.dcell:hover{background:#0a1116}
+.dcell .lbl{font-size:10px;letter-spacing:.2em;color:var(--dim)}
+.dcell .val{font-size:27px;font-weight:700;color:var(--amber);margin-top:6px;letter-spacing:-.02em}
+.dcell .val.g{color:var(--green)} .dcell .val.r{color:var(--red)} .dcell .val.v{color:var(--violet)}
+.dcell .note{font-size:10.5px;color:#54666d;margin-top:4px}
+.dcell.warn::after{content:"";position:absolute;top:12px;right:12px;width:6px;height:6px;background:var(--red);border-radius:50%;box-shadow:0 0 10px var(--red)}
+
+/* ---------- CANLI AKIŞ ---------- */
+.stream{border:1px solid var(--line2);background:#040a09;position:relative}
+.stream .bar{
+  display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid var(--line2);
+  font-size:11px;letter-spacing:.18em;color:var(--green);background:rgba(94,242,160,.04)
+}
+.stream .bar .rec{width:7px;height:7px;background:var(--red);border-radius:50%;animation:pulse 1.4s infinite}
+.stream .bar .sp{flex:1}
+.stream .log{padding:16px 14px;height:288px;overflow-y:auto;font-size:13px;line-height:1.95}
+.logline{white-space:pre-wrap;word-break:break-word}
+.logline .ts{color:#3f6f52}
+.logline .msg{color:#a8c9b8}
+.logline.warn .msg{color:var(--amber)}
+.logline.err .msg{color:var(--red)}
+.logline.q .msg{color:var(--violet)}
+.stream .foot{padding:8px 14px;border-top:1px solid var(--line2);font-size:11px;color:#4d6b5a;display:flex;gap:12px;align-items:center}
+
+/* ---------- KAYITLAR (timeline) ---------- */
+.records{display:grid;gap:14px}
+.rec{
+  border:1px solid var(--line);background:rgba(255,255,255,.014);padding:0;position:relative;
+  transition:.3s;overflow:hidden
+}
+.rec:hover{border-color:rgba(255,180,84,.4);background:rgba(255,180,84,.03)}
+.rec .hd{display:flex;gap:14px;align-items:center;padding:14px 18px;border-bottom:1px dashed rgba(255,180,84,.13);flex-wrap:wrap}
+.rec .id{font-size:11px;letter-spacing:.2em;color:var(--amber);border:1px solid var(--line);padding:3px 9px}
+.rec .ttl{font-size:13.5px;letter-spacing:.16em;color:#dfeaec;text-transform:uppercase}
+.rec .dt{margin-left:auto;font-size:10.5px;color:#4f6068;letter-spacing:.08em}
+.rec .bd{padding:16px 18px}
+.rec .obs{font-size:14px;color:#a8bcc2;margin:0}
+.rec .qline{
+  margin-top:13px;padding:9px 12px;border-left:2px solid var(--red);
+  background:rgba(255,95,86,.06);font-size:13px;color:#ffb0ab
+}
+.rec .qline b{color:var(--red);letter-spacing:.14em;font-size:10.5px;display:block;margin-bottom:2px}
+.rec.hollow{border-color:rgba(255,95,86,.34)}
+.rec.hollow .id{color:var(--red);border-color:rgba(255,95,86,.34)}
+.rec.hollow .bd{border-left:2px solid rgba(255,95,86,.4)}
+
+/* ---------- GALERİ ---------- */
+.frames{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.frame{
+  aspect-ratio:1/1;border:1px solid var(--line);background:#070b0e;position:relative;overflow:hidden;cursor:pointer;transition:.28s
+}
+.frame:hover{border-color:var(--amber);transform:translateY(-2px);box-shadow:0 10px 34px rgba(0,0,0,.55)}
+.frame img{width:100%;height:100%;object-fit:cover;display:block}
+.frame .fb{
+  position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;background:
+    repeating-linear-gradient(0deg, rgba(255,255,255,.028) 0 1px, transparent 1px 3px),
+    linear-gradient(135deg,#0b1116,#070b0e);
+  color:#5d7078;font-size:10.5px;letter-spacing:.18em;text-align:center;padding:10px
+}
+.frame.lost .fb{display:flex}
+.frame .fb .q{color:var(--red);font-size:16px;letter-spacing:.2em}
+.frame .no{position:absolute;top:8px;left:10px;font-size:10px;color:rgba(255,180,84,.75);z-index:2;letter-spacing:.14em}
+
+/* ---------- SES KAYITLARI ---------- */
+.audio-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.acard{border:1px solid var(--line);background:rgba(255,255,255,.014);padding:18px}
+.acard .ah{display:flex;gap:12px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+.acard .dur{font-size:11px;color:var(--green);border:1px solid var(--line2);padding:2px 8px}
+.acard h4{margin:0;font-size:12.5px;letter-spacing:.16em;color:#cfe0e4;text-transform:uppercase}
+.acard video{width:100%;background:#000;border:1px solid rgba(255,255,255,.07);display:block}
+.acard.lost video{display:none}
+.acard .lostbox{
+  display:none;border:1px dashed rgba(255,95,86,.35);padding:26px 14px;text-align:center;
+  color:#ff9a94;font-size:11.5px;letter-spacing:.16em;background:rgba(255,95,86,.05)
+}
+.acard.lost .lostbox{display:block}
+
+/* ---------- TANIKLAR ---------- */
+.wit{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.wcard{border:1px solid var(--line);padding:20px;background:rgba(255,255,255,.014);position:relative;transition:.3s}
+.wcard:hover{border-color:var(--line2);background:rgba(94,242,160,.03)}
+.wcard .who{font-size:10.5px;letter-spacing:.18em;color:var(--dim)}
+.wcard .q{font-size:16px;line-height:1.6;color:#dbe8ea;margin:12px 0 0}
+.wcard .sig{font-size:10.5px;color:#4a5c63;margin-top:14px;letter-spacing:.1em}
+
+/* ---------- ARŞİV ARAMA ---------- */
+.searchbox{display:grid;grid-template-columns:1fr auto;gap:0;border:1px solid var(--line);max-width:620px}
+.searchbox input{
+  background:transparent;border:0;outline:none;color:var(--ink);font-family:var(--mono);font-size:14px;
+  padding:15px 16px;letter-spacing:.06em;width:100%
+}
+.searchbox input::placeholder{color:#4d5f66}
+.searchbox button{background:rgba(255,180,84,.08);border:0;border-left:1px solid var(--line);color:var(--amber);
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.2em;padding:0 22px;cursor:pointer;transition:.2s}
+.searchbox button:hover{background:rgba(255,180,84,.2)}
+#sresult{margin-top:18px;font-size:13px;color:#93a7ad;max-width:620px}
+#sresult .hit{border-left:2px solid var(--green);padding:8px 12px;background:rgba(94,242,160,.05);margin-top:8px}
+#sresult .miss{border-left:2px solid var(--red);padding:8px 12px;background:rgba(255,95,86,.05);color:#ffb0ab}
+
+/* ---------- NOT (mektup) ---------- */
+.note{
+  border:1px solid var(--line);border-left:3px solid var(--amber);padding:32px 30px;background:rgba(255,180,84,.03);
+  font-size:15px;line-height:1.95;color:#c3d3d7
+}
+.note p{margin:0 0 15px}
+.note p:last-child{margin:0}
+.note .sig{display:block;margin-top:22px;font-size:12px;color:var(--dim);letter-spacing:.16em}
+.note .strike{color:#6a7a80;text-decoration:line-through;text-decoration-color:rgba(255,95,86,.6)}
+
+/* ---------- TANIK DEFTERİ ---------- */
+.gb{border:1px solid var(--line);background:rgba(255,255,255,.014);padding:24px}
+.gb form{display:grid;gap:12px;max-width:560px}
+.gb input,.gb textarea{
+  background:#05090c;border:1px solid var(--line);color:var(--ink);font-family:var(--mono);font-size:13.5px;
+  padding:12px 14px;outline:none;transition:.2s;resize:vertical;width:100%
+}
+.gb input:focus,.gb textarea:focus{border-color:var(--amber);box-shadow:0 0 0 3px rgba(255,180,84,.08)}
+.gb .entries{margin-top:24px;border-top:1px dashed var(--line);padding-top:18px;display:grid;gap:12px;max-width:700px}
+.gb .e{border-left:2px solid var(--line2);padding:8px 14px;background:rgba(94,242,160,.03)}
+.gb .e .em{font-size:11px;color:var(--green);letter-spacing:.1em}
+.gb .e .et{font-size:13.5px;color:#b9c9cd;margin-top:5px;word-break:break-word}
+.gb .e .ed{font-size:10.5px;color:#4e5f66;margin-top:5px}
+
+/* ---------- FINAL OVERLAY ---------- */
+#overlay{
+  position:fixed;inset:0;z-index:950;background:rgba(2,4,6,.97);display:none;align-items:center;justify-content:center;
+  padding:24px;overflow-y:auto
+}
+#overlay.open{display:flex}
+.obox{width:min(620px,94vw);border:1px solid var(--line);background:#05090c;padding:34px 30px;text-align:center}
+.obox .st{font-size:10.5px;letter-spacing:.3em;color:var(--red);margin-bottom:18px}
+.obox h3{margin:0 0 18px;font-size:clamp(1.5rem,5vw,2.2rem);letter-spacing:.14em;color:var(--amber)}
+.obox .dl{display:grid;gap:7px;text-align:left;font-size:13px;color:#9db0b6;margin:22px 0}
+.obox .dl div{display:flex;gap:12px;border-bottom:1px dashed rgba(255,255,255,.07);padding-bottom:6px}
+.obox .dl span:first-child{color:var(--dim);min-width:120px}
+.obox .last{font-size:13px;color:#7f9298;border-left:2px solid var(--violet);padding:10px 14px;background:rgba(167,139,250,.05);text-align:left;margin:20px 0}
+
+/* ---------- TERMINAL PANEL ---------- */
+#termPanel{
+  position:fixed;left:0;right:0;bottom:0;z-index:850;background:rgba(3,7,9,.97);
+  border-top:1px solid var(--line2);box-shadow:0 -20px 60px rgba(0,0,0,.6);
+  transform:translateY(101%);transition:transform .35s cubic-bezier(.2,.8,.3,1);height:min(46vh,420px);display:flex;flex-direction:column
+}
+#termPanel.open{transform:translateY(0)}
+#termPanel .th{display:flex;align-items:center;gap:12px;padding:8px 14px;border-bottom:1px solid var(--line2);font-size:11px;letter-spacing:.16em;color:var(--green)}
+#termPanel .th .sp{flex:1}
+#termOut{flex:1;overflow-y:auto;padding:14px;font-size:13px;line-height:1.8}
+#termOut .in-echo{color:var(--amber)}
+#termOut .err{color:var(--red)}
+#termOut .ok{color:var(--green)}
+#termOut .muted{color:#4f6068}
+#termIn{
+  border:0;border-top:1px solid var(--line2);background:transparent;color:var(--ink);
+  font-family:var(--mono);font-size:13.5px;padding:12px 14px;outline:none;width:100%
+}
+#termIn::placeholder{color:#41545b}
+
+/* ---------- reveal ---------- */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.3,1)}
+.rv.in{opacity:1;transform:none}
+
+/* ---------- lightbox ---------- */
+#lb{
+  position:fixed;inset:0;z-index:940;background:rgba(2,4,6,.95);display:none;align-items:center;justify-content:center;padding:26px
+}
+#lb.open{display:flex}
+#lb img{max-width:94vw;max-height:82vh;object-fit:contain;border:1px solid var(--line)}
+#lb .lbx{position:absolute;top:18px;right:20px;font-size:26px;color:var(--dim);cursor:pointer;background:none;border:0;font-family:var(--mono)}
+#lb .lbn{position:absolute;bottom:20px;left:0;right:0;text-align:center;font-size:11.5px;color:var(--dim);letter-spacing:.2em}
+#lb .nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,180,84,.08);border:1px solid var(--line);
+  color:var(--amber);font-size:20px;width:46px;height:60px;cursor:pointer;font-family:var(--mono)}
+#lb .nav:hover{background:rgba(255,180,84,.2)}
+#lb .prev{left:14px}#lb .next{right:14px}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);padding:38px 0 60px;margin-top:20px;position:relative;z-index:2}
+footer .frow{display:flex;gap:16px;flex-wrap:wrap;align-items:center;font-size:11px;color:#4c5e65;letter-spacing:.12em}
+footer .frow .sp{flex:1}
+footer .stamp{border:1px solid var(--line);padding:14px 16px;margin-top:20px;font-size:11.5px;color:#54666d;letter-spacing:.1em}
+
+/* ---------- responsive ---------- */
+@media (max-width:1100px){
+  .dossier{grid-template-columns:repeat(3,1fr)}
+  .frames{grid-template-columns:repeat(3,1fr)}
+}
+@media (max-width:860px){
+  body{font-size:14px}
+  .pad{padding:54px 0}
+  .dossier{grid-template-columns:repeat(2,1fr)}
+  .frames{grid-template-columns:repeat(2,1fr)}
+  .wit{grid-template-columns:1fr}
+  .audio-grid{grid-template-columns:1fr}
+  .hero{min-height:auto;padding:44px 0 56px}
+  .searchbox{grid-template-columns:1fr}
+  .searchbox button{border-left:0;border-top:1px solid var(--line);padding:12px}
+  .note{padding:24px 20px}
+  #termPanel{height:min(58vh,460px)}
+  .topbar .path{max-width:100%;flex:1 0 100%}
+}
+@media (max-width:480px){
+  .dossier{grid-template-columns:1fr 1fr}
+  .dcell .val{font-size:22px}
+  .frames{gap:8px}
+  .rec .hd{gap:8px}
+  .rec .dt{margin-left:0;flex:1 0 100%}
+  .wrap{padding:0 15px}
+  .topbar .in{padding:8px 15px}
+}
+@media (max-height:560px) and (orientation:landscape){
+  .hero{min-height:auto;padding:30px 0 34px}
+  .hero h1{font-size:clamp(1.7rem,6vw,3rem)}
+  .pad{padding:34px 0}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.05ms!important}
+}
+</style>
+</head>
+<body>
+
+<div class="flick"></div><div class="scan"></div><div class="vig"></div><canvas id="noise" width="180" height="120"></canvas>
+
+<!-- ============ BOOT ============ -->
+<div id="boot">
+  <div class="bootbox" id="bootLines"></div>
+  <button id="bootBtn" disabled>BAŞLATILIYOR…</button>
+</div>
+
+<!-- ============ TOPBAR ============ -->
+<div class="topbar">
+  <div class="in">
+    <span class="path">~/gözlem/C-01/kayıt.log</span>
+    <span id="clock">--:--:--</span>
+    <span class="sp"></span>
+    <span id="statustxt">DURUM: AÇIK</span>
+    <button class="tbtn" id="termBtn">TERMINAL</button>
+    <button class="tbtn" id="sndBtn">SES: AÇIK</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div>
+    <div class="kicker"><span class="dot"></span> GÖZLEM DOSYASI — KONU KODU: C-01</div>
+    <h1>ÇINAR <span class="g" data-t="ULAŞIN">ULAŞIN</span></h1>
+    <p class="sub">
+      Bu sayfa bir kutlama değil. Bu bir <em>kayıt</em>.
+      Birisi bir gün oturdu, senin dosyanı açtı ve gözlemleri yazdı.
+      Hiçbir yerde senin adın yok — sadece <em>C-01</em> var.
+      Sorular da cevapsız bırakılmış. Niye? Bilmiyoruz. Dosya açık.
+    </p>
+    <div class="chips">
+      <span class="chip">KAYIT: <b>8</b></span>
+      <span class="chip">TANIK: <b>5</b></span>
+      <span class="chip">BOŞLUK: <b>4 ay</b></span>
+      <span class="chip warn">İMZA: <b>YOK</b></span>
+      <span class="chip ok">KAPSAMA: <b>%0</b></span>
+    </div>
+    <div class="acts">
+      <button class="btn" id="openStreamBtn">KAYDI AÇ</button>
+      <button class="btn g" id="openTermBtn">TERMINAL</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DOSYA ÖZETİ ============ -->
+<section class="pad">
+  <div class="sec-h rv"><span class="n">01</span><span class="t">Dosya Özeti</span><span class="rule"></span></div>
+  <div class="dossier rv">
+    <div class="dcell"><div class="lbl">KAYIT SAYISI</div><div class="val" data-count="8">0</div><div class="note">son: 2026-11-02</div></div>
+    <div class="dcell"><div class="lbl">TANIK İFADESİ</div><div class="val g" data-count="5">0</div><div class="note">kimlik: kayıt dışı</div></div>
+    <div class="dcell warn"><div class="lbl">BOŞLUK</div><div class="val r" data-count="4">0</div><div class="note">ay — sebep yazılmamış</div></div>
+    <div class="dcell"><div class="lbl">TEKRAR YAZIM</div><div class="val v" data-count="3">0</div><div class="note">aynı satır, 3 kez</div></div>
+    <div class="dcell"><div class="lbl">SONRAKİ GÖZLEM</div><div class="val">--:--</div><div class="note">hesaplanamadı</div></div>
+    <div class="dcell warn"><div class="lbl">KARAR</div><div class="val r" style="font-size:19px">BELİRTİLMEDİ</div><div class="note">alan boş</div></div>
+    <div class="dcell"><div class="lbl">GÖRÜNTÜ KAPSAMA</div><div class="val">%0</div><div class="note">kamera: yok</div></div>
+    <div class="dcell"><div class="lbl">İMZA</div><div class="val" style="font-size:19px">YOK</div><div class="note">gözlemci: —</div></div>
+  </div>
+</section>
+
+<!-- ============ CANLI AKIŞ ============ -->
+<section class="pad" id="streamSec">
+  <div class="sec-h rv"><span class="n">02</span><span class="t">Canlı Kayıt Akışı</span><span class="rule"></span></div>
+  <div class="stream rv">
+    <div class="bar"><span class="rec"></span><span>CANLI AKIŞ — OTOMATİK</span><span class="sp"></span><span id="streamClock">00:00:00</span></div>
+    <div class="log" id="liveLog">
+      <div class="logline"><span class="ts">[00:00:00]</span> <span class="msg">başlangıç — dosya açılıyor</span></div>
+      <div class="logline"><span class="ts">[00:00:00]</span> <span class="msg">konu dizini: C-01</span></div>
+    </div>
+    <div class="foot"><span id="streamNote">akış devam ediyor</span><span style="flex:1"></span><span id="streamCount">satır: 2</span></div>
+  </div>
+</section>
+
+<!-- ============ GÖZLEM KAYITLARI ============ -->
+<section class="pad">
+  <div class="sec-h rv"><span class="n">03</span><span class="t">Gözlem Kayıtları</span><span class="rule"></span></div>
+  <div class="records">
+
+    <article class="rec rv">
+      <div class="hd"><span class="id">REC-01</span><span class="ttl">İlk Satır</span><span class="dt">2019-11-02 09:14</span></div>
+      <div class="bd">
+        <p class="obs">Gözlemci dosyayı açtı. Ad soruldu. Cevap yerine bir numara verildi: <b>C-01</b>. Numara nereden geldiği dosyada yazmıyor.</p>
+        <div class="qline"><b>SORU 01</b>C-01, adının yerine mi geçti — yoksa adı mı değiştirdi?</div>
+      </div>
+    </article>
+
+    <article class="rec rv">
+      <div class="hd"><span class="id">REC-02</span><span class="ttl">İlk Hareket</span><span class="dt">2019-11-02 09:14</span></div>
+      <div class="bd">
+        <p class="obs">Kayıt, açılıştan <b>4 saniye</b> sonra başlıyor. Öncesi boş. O dört saniyede ne oldu, dosyada yer almıyor.</p>
+        <div class="qline"><b>SORU 02</b>İlk dört saniye neden kayda girmemiş?</div>
+      </div>
+    </article>
+
+    <article class="rec rv">
+      <div class="hd"><span class="id">REC-03</span><span class="ttl">Tek Ses</span><span class="dt">2021-06-18 21:03</span></div>
+      <div class="bd">
+        <p class="obs">Bir ses kaydedildi: yüksek, kısa, sadece bir kez. Sonra dosya sessizleşti. Ses dosyada <b>kimseye atfedilmemiş</b>.</p>
+        <div class="qline"><b>SORU 03</b>Bu ses C-01'in miydi, yoksa onu mu kaydeden birinin mi?</div>
+      </div>
+    </article>
+
+    <article class="rec rv">
+      <div class="hd"><span class="id">REC-04</span><span class="ttl">Üç Kez</span><span class="dt">2022-03-02 14:20</span></div>
+      <div class="bd">
+        <p class="obs">Aynı satır üç kez yazıldı. Üçüncüsünde fazladan iki kelime var: <b>"biliyorum."</b> Önceki ikisinde bu yok.</p>
+        <div class="qline"><b>SORU 04</b>"biliyorum" neyi biliyordu — ve neden sadece üçüncü yazımda?</div>
+      </div>
+    </article>
+
+    <article class="rec hollow rv">
+      <div class="hd"><span class="id">REC-05</span><span class="ttl">Tarih Hatası</span><span class="dt">2023-01-09 08:00</span></div>
+      <div class="bd">
+        <p class="obs">Kayıt üç yıl öncesini gösteriyordu. <b>Geri alındı.</b> Geri alınan kaydın içeriği silinmiş, sadece tarihi kaldı.</p>
+        <div class="qline"><b>SORU 05</b>Hangi üç yıl silindi — ve silmek, gizlemek miydi?</div>
+      </div>
+    </article>
+
+    <article class="rec hollow rv">
+      <div class="hd"><span class="id">REC-06</span><span class="ttl">Dört Ay Boşluk</span><span class="dt">2023-04-01 → 2023-08-01</span></div>
+      <div class="bd">
+        <p class="obs">Dört ay boyunca hiç kayıt yok. Sebep alanı <b>boş bırakılmış</b>. Sistem boşluğu otomatik doldurmamış, kimse de doldurmamış.</p>
+        <div class="qline"><b>SORU 06</b>Dört ay nereye gitti? Kim yazmadı, kim de yazamadı mı?</div>
+      </div>
+    </article>
+
+    <article class="rec rv">
+      <div class="hd"><span class="id">REC-07</span><span class="ttl">Geri Dönüş</span><span class="dt">2023-08-01 11:45</span></div>
+      <div class="bd">
+        <p class="obs">Boşluktan sonraki ilk kayıt: aynı gün, aynı saat, aynı kare. Dosya bunu <b>"devam"</b> olarak işaretlemiş. Devam eden şey aynı mıydı, kopyası mıydı?</p>
+        <div class="qline"><b>SORU 07</b>Aynı günü tekrar etmek, devam etmek mi — yoksa baştan başlamak mı?</div>
+      </div>
+    </article>
+
+    <article class="rec rv">
+      <div class="hd"><span class="id">REC-08</span><span class="ttl">Bugün</span><span class="dt">2026-11-02 00:00</span></div>
+      <div class="bd">
+        <p class="obs">Dosya bugün açıldı. Sebep alanına <b>"doğum günü"</b> yazıldı. Doğrulama bekleniyor. Doğrulama gelmedi. Dosya yine de açıldı.</p>
+        <div class="qline"><b>SORU 08</b>Doğum günü mü, yoksa hatırlatma mı? Farkı kim anlayacak?</div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============ GALERİ ============ -->
+<section class="pad">
+  <div class="sec-h rv"><span class="n">04</span><span class="t">Kapsanan Kareler</span><span class="rule"></span></div>
+  <p class="rv" style="color:#7e9197;font-size:13.5px;margin:-14px 0 22px">
+    Kapsama oranı %0. Bu dosyadan görüntü çekilmemiş. Boş yerler boş bırakıldı — doldurulmadı.
+  </p>
+  <div class="frames rv" id="frames">
+    <div class="frame" data-i="0"><span class="no">F-01</span><img src="photos/photo1.jpg" alt="Çerçeve 1"><div class="fb"><span class="q">KARAR YOK</span><span>KAPSANAMADI</span></div></div>
+    <div class="frame" data-i="1"><span class="no">F-02</span><img src="photos/photo2.jpg" alt="Çerçeve 2"><div class="fb"><span class="q">KARAR YOK</span><span>KAPSANAMADI</span></div></div>
+    <div class="frame" data-i="2"><span class="no">F-03</span><img src="photos/photo3.jpg" alt="Çerçeve 3"><div class="fb"><span class="q">KARAR YOK</span><span>KAPSANAMADI</span></div></div>
+    <div class="frame" data-i="3"><span class="no">F-04</span><img src="photos/photo4.jpg" alt="Çerçeve 4"><div class="fb"><span class="q">KARAR YOK</span><span>KAPSANAMADI</span></div></div>
+    <div class="frame" data-i="4"><span class="no">F-05</span><img src="photos/photo5.jpg" alt="Çerçeve 5"><div class="fb"><span class="q">KARAR YOK</span><span>KAPSANAMADI</span></div></div>
+    <div class="frame" data-i="5"><span class="no">F-06</span><img src="photos/photo6.jpg" alt="Çerçeve 6"><div class="fb"><span class="q">KARAR YOK</span><span>KAPSANAMADI</span></div></div>
+    <div class="frame" data-i="6"><span class="no">F-07</span><img src="photos/photo7.jpg" alt="Çerçeve 7"><div class="fb"><span class="q">KARAR YOK</span><span>KAPSANAMADI</span></div></div>
+    <div class="frame" data-i="7"><span class="no">F-08</span><img src="photos/photo8.jpg" alt="Çerçeve 8"><div class="fb"><span class="q">KARAR YOK</span><span>KAPSANAMADI</span></div></div>
+  </div>
+</section>
+
+<!-- ============ SES KAYITLARI ============ -->
+<section class="pad">
+  <div class="sec-h rv"><span class="n">05</span><span class="t">Ses Kayıtları</span><span class="rule"></span></div>
+  <p class="rv" style="color:#7e9197;font-size:13.5px;margin:-14px 0 22px">
+    Dört kanal. Üçü dolu, biri kayıp. Kaybın yerine de uydurma bir ses konmadı.
+  </p>
+  <div class="audio-grid rv">
+    <div class="acard" data-a="0">
+      <div class="ah"><h4>Kanal A — Tanık 01</h4><span class="dur">00:14</span></div>
+      <video src="public/vid1.mp4" controls preload="metadata" playsinline></video>
+      <div class="lostbox">KAYIT KANALINDA YOK</div>
+    </div>
+    <div class="acard" data-a="1">
+      <div class="ah"><h4>Kanal B — Tanık 02</h4><span class="dur">00:22</span></div>
+      <video src="public/vid2.mp4" controls preload="metadata" playsinline></video>
+      <div class="lostbox">KAYIT KANALINDA YOK</div>
+    </div>
+    <div class="acard" data-a="2">
+      <div class="ah"><h4>Kanal C — Tanık 03</h4><span class="dur">00:09</span></div>
+      <video src="public/vid3.mp4" controls preload="metadata" playsinline></video>
+      <div class="lostbox">KAYIT KANALINDA YOK</div>
+    </div>
+    <div class="acard lost" data-a="3">
+      <div class="ah"><h4>Kanal D — Kayıp</h4><span class="dur">--:--</span></div>
+      <div class="lostbox">KAYIT KANALINDA YOK</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TANIKLAR ============ -->
+<section class="pad">
+  <div class="sec-h rv"><span class="n">06</span><span class="t">Tanık İfadeleri</span><span class="rule"></span></div>
+  <p class="rv" style="color:#7e9197;font-size:13.5px;margin:-14px 0 22px">
+    Beş ifade. Hiçbirinin kimliği dosyada yok. Beşi de kısa — sanki daha fazlası söylenemezmiş gibi.
+  </p>
+  <div class="wit rv">
+    <div class="wcard"><div class="who">TANIK 01 — KİMLİK: KAYIT DIŞI</div><p class="q">"İyi doğdun. Başka bir şey söylememiştim."</p><div class="sig">imza yok</div></div>
+    <div class="wcard"><div class="who">TANIK 02 — KİMLİK: KAYIT DIŞI</div><p class="q">"Tanıyorum. Bu kadar."</p><div class="sig">imza yok</div></div>
+    <div class="wcard"><div class="who">TANIK 03 — KİMLİK: KAYIT DIŞI</div><p class="q">"İyi ki varsın. Sorular da soruyor, bu arada."</p><div class="sig">imza yok</div></div>
+    <div class="wcard"><div class="who">TANIK 04 — KİMLİK: KAYIT DIŞI</div><p class="q">"Doğum günün kutlu olsun. Sadece bu."</p><div class="sig">imza yok</div></div>
+    <div class="wcard"><div class="who">TANIK 05 — KİMLİK: KAYIT DIŞI</div><p class="q">"İyi ki varsın. Gerisi dosyada."</p><div class="sig">imza yok</div></div>
+  </div>
+</section>
+
+<!-- ============ ARŞİV ARAMA ============ -->
+<section class="pad">
+  <div class="sec-h rv"><span class="n">07</span><span class="t">Arşiv Araması</span><span class="rule"></span></div>
+  <div class="rv">
+    <div class="searchbox">
+      <input id="q" type="text" placeholder="bir isim yaz…" autocomplete="off" spellcheck="false">
+      <button id="qbtn">ARA</button>
+    </div>
+    <div id="sresult"></div>
+  </div>
+</section>
+
+<!-- ============ NOT ============ -->
+<section class="pad">
+  <div class="sec-h rv"><span class="n">08</span><span class="t">Gözlemci Notu</span><span class="rule"></span></div>
+  <div class="note rv">
+    <p>Bu notu dosyayı açan kişi yazdı. Adını bırakmadı.</p>
+    <p>"Doğum günün kutlu olsun" cümlesini yazmam gerekiyordu. <span class="strike">Yazdım, sonra sildim.</span> Yerine konu kodu yazdım. Kod daha dürüst geldi — kimse bir numaraya kızmaz, numaralar kızmaz.</p>
+    <p>Sen bunu okuyorsan, demek ki dosya hâlâ açık. Soruların cevabı hâlâ yok. Bu normal. Cevaplar hep sonra geliyormuş gibi bir izlenim var, ama gelmiyorlar. Belki senin okuduğun yerden sonra başlıyorlar.</p>
+    <p>Dosyada kalan tek cümle şu: <b>"içeriği belirsiz, dosya hala açık."</b></p>
+    <span class="sig">— imza yok · gözlemci: — · 2026-11-02</span>
+  </div>
+</section>
+
+<!-- ============ TANIK DEFTERİ ============ -->
+<section class="pad">
+  <div class="sec-h rv"><span class="n">09</span><span class="t">Tanık Defteri</span><span class="rule"></span></div>
+  <div class="gb rv">
+    <p style="margin:0 0 16px;color:#7e9197;font-size:13.5px">
+      Defter açık. İstediğin yaz. Kayıt senin adınla değil, girdiğin isimle durur.
+    </p>
+    <form id="gbForm" autocomplete="off">
+      <input type="text" id="gbName" placeholder="kimlik (boş bırakılabilir)" maxlength="40">
+      <textarea id="gbText" rows="3" placeholder="ifade…" maxlength="400"></textarea>
+      <button type="submit" class="btn" style="justify-self:start">KAYDET</button>
+    </form>
+    <div class="entries" id="gbEntries"></div>
+  </div>
+</section>
+
+<!-- ============ KAPANIŞ ============ -->
+<section class="pad" style="text-align:center">
+  <div class="sec-h rv" style="justify-content:center"><span class="n">10</span><span class="t">Kapanış</span><span class="rule"></span></div>
+  <p class="rv" style="color:#8ea1a7;max-width:560px;margin:0 auto 26px">
+    Dosyayı kapatmak sana kalıyor. Kapattığında arşive alınacak ve bir daha açılmayacak.
+    Emin misin? Aslında emin de değiliz — bu satırı da bir gözlemci yazdı.
+  </p>
+  <button class="btn rv" id="closeBtn">DOSYAYI KAPAT</button>
+</section>
+
+<footer>
+  <div class="frow">
+    <span>DOSYA: ~/gözlem/C-01/kayıt.log</span><span class="sp"></span>
+    <span>SÜRÜM 1.0</span><span>KONU: C-01</span><span>İMZA: YOK</span>
+  </div>
+  <div class="stamp">
+    Bu dosya bir doğum günü kaydı değildir. Bir gözlem dosyasıdır. Doğum günü ile ilgili bölüm,
+    kayıtların arasına saklanmıştır. Sen onu bulursan, bulmazsan — dosya yine de senindi.
+  </div>
+</footer>
+
+</div><!-- /wrap -->
+
+<!-- ============ TERMINAL PANEL ============ -->
+<div id="termPanel">
+  <div class="th"><span>◆ C-01 SHELL</span><span class="sp"></span><span id="termHint">help yaz</span><button class="tbtn" id="termClose">KAPAT</button></div>
+  <div id="termOut"></div>
+  <input id="termIn" type="text" placeholder="komut yaz… (help)" autocomplete="off" spellcheck="false">
+</div>
+
+<!-- ============ LIGHTBOX ============ -->
+<div id="lb">
+  <button class="lbx" id="lbx">×</button>
+  <button class="nav prev" id="lbp">‹</button>
+  <img id="lbi" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="kare">
+  <button class="nav next" id="lbn">›</button>
+  <div class="lbn" id="lbl">—</div>
+</div>
+
+<!-- ============ OVERLAY ============ -->
+<div id="overlay">
+  <div class="obox">
+    <div class="st">ARŞİV KAPANDI</div>
+    <h3>C-01</h3>
+    <div class="dl">
+      <div><span>kayıt</span><span>8 (sonuncusu silinmiş)</span></div>
+      <div><span>tanık</span><span>5 — kimlik yok</span></div>
+      <div><span>boşluk</span><span>4 ay — sebep yazılmamış</span></div>
+      <div><span>kapsama</span><span>%0</span></div>
+      <div><span>görüntü</span><span>0 kare</span></div>
+      <div><span>ses</span><span>3 kanal / 1 kanal kayıp</span></div>
+      <div><span>imza</span><span>yok</span></div>
+      <div><span>durum</span><span>kapalı</span></div>
+    </div>
+    <div class="last">
+      Son satır: <i>"içeriği belirsiz, dosya hala açık."</i><br>
+      Dosya kapandı. Yine de hâlâ açık gibi duruyor. Farkı sen mi anlıyorsun?
+    </div>
+    <button class="btn" id="reopenBtn">YİNE AÇ</button>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------------- SES ---------------- */
+var AC=null, soundOn=true;
+function audio(){ if(!AC){ try{ AC=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ return null; } } return AC; }
+function beep(freq,dur,vol,type){
+  if(!soundOn) return;
+  var c=audio(); if(!c) return;
+  if(c.state==="suspended") c.resume();
+  try{
+    var o=c.createOscillator(), g=c.createGain();
+    o.type=type||"square"; o.frequency.value=freq;
+    g.gain.setValueAtTime(0,c.currentTime);
+    g.gain.linearRampToValueAtTime(vol||0.03,c.currentTime+0.008);
+    g.gain.exponentialRampToValueAtTime(0.0001,c.currentTime+(dur||0.06));
+    o.connect(g); g.connect(c.destination);
+    o.start(); o.stop(c.currentTime+(dur||0.06)+0.02);
+  }catch(e){}
+}
+function unlockAudio(){ var c=audio(); if(c && c.state==="suspended") c.resume(); }
+
+/* ---------------- NOISE ---------------- */
+(function(){
+  var cv=document.getElementById("noise"); if(!cv) return;
+  var cx=cv.getContext("2d");
+  setInterval(function(){
+    var d=cx.createImageData(cv.width,cv.height);
+    for(var i=0;i<d.data.length;i+=4){ var v=Math.random()*255|0; d.data[i]=d.data[i+1]=d.data[i+2]=v; d.data[i+3]=255; }
+    cx.putImageData(d,0,0);
+  },120);
+})();
+
+/* ---------------- SAAT ---------------- */
+function two(n){ return (n<10?"0":"")+n; }
+function tickClock(){
+  var d=new Date(), el=document.getElementById("clock");
+  if(el) el.textContent=two(d.getHours())+":"+two(d.getMinutes())+":"+two(d.getSeconds());
+}
+setInterval(tickClock,1000); tickClock();
+
+/* ---------------- BOOT ---------------- */
+var BOOT=[
+  {t:"başlatma dizisi — kernel: gozlem-dosya 1.0", c:"b"},
+  {t:"konu dizini taranıyor … C-01", c:"g"},
+  {t:"8 kayıt okundu", c:"b"},
+  {t:"5 tanık ifadesi okundu", c:"b"},
+  {t:"görüntü kapsaması: %0 — kamera bulunamadı", c:"r"},
+  {t:"boşluk tespit edildi: 4 ay (sebep alanı boş)", c:"r"},
+  {t:"imza alanı: —", c:"b"},
+  {t:"", c:"b"},
+  {t:"uyarı: bu dosya bir kutlama değil.", c:"a"},
+  {t:"hazır.", c:"g"}
+];
+(function(){
+  var box=document.getElementById("bootLines"), i=0;
+  var btn=document.getElementById("bootBtn");
+  function step(){
+    if(i>=BOOT.length){
+      btn.disabled=false; btn.textContent="DOSYAYI AÇ";
+      beep(880,0.08,0.04); return;
+    }
+    var o=BOOT[i++];
+    var d=document.createElement("div");
+    d.className=o.c;
+    d.innerHTML="[boot] "+o.t+(o.t?"":"");
+    box.appendChild(d);
+    beep(520+Math.random()*180,0.03,0.018);
+    setTimeout(step, 210+Math.random()*160);
+  }
+  step();
+  btn.addEventListener("click",function(){
+    unlockAudio();
+    document.getElementById("boot").classList.add("gone");
+    setTimeout(function(){ document.getElementById("boot").style.display="none"; },800);
+    startStream();
+    /* terminali kisa bir "teaser" olarak ac — kullanici elle acar/kapatirsa
+       dokunma, otomatik kapama yalnizca kullanici hicbir sey yapmadiysa */
+    setTimeout(function(){
+      openTerminal({noFocus:true});
+      tOut("oturum baslatildi. <span class=\"muted\">artik izleniyor olabilirsin.</span>","muted");
+      termAutoClose=setTimeout(function(){
+        if(termOpen && !termTouched) closeTerminal();
+      }, 4200);
+    }, 900);
+  });
+})();
+
+/* ---------------- CANLI AKIŞ ---------------- */
+var STREAM=[
+  {m:"konu dizini açıldı: C-01", c:""},
+  {m:"son gözlem tarihi: 2026-11-02 — bugün", c:""},
+  {m:"görüntü kanalı yok. kare üretilmedi.", c:"warn"},
+  {m:"boşluk kaydı tarandı: 4 ay, sebep alanı boş", c:"warn"},
+  {m:"tekrar yazım tespit edildi: REC-04 (3 kopya)", c:"warn"},
+  {m:"soru cevapsız bırakıldı (SORU 01..08)", c:"q"},
+  {m:"tanık ifadeleri 5 adet — hiçbirinde kimlik yok", c:""},
+  {m:"ses kanalları: 3 dolu, 1 kayıp", c:"warn"},
+  {m:"imza alanı boş. dosya yine de açık.", c:""},
+  {m:"sonraki gözlem zamanı hesaplanamadı", c:"q"},
+  {m:"C-01 hâlâ burada.", c:""}
+];
+var streamIdx=0, streamStarted=false, streamSec=0;
+function streamLine(o){
+  var box=document.getElementById("liveLog"); if(!box) return;
+  streamSec++;
+  var ts=two(Math.floor(streamSec/3600)%24)+":"+two(Math.floor(streamSec/60)%60)+":"+two(streamSec%60);
+  var d=document.createElement("div");
+  d.className="logline "+(o.c||"");
+  d.innerHTML='<span class="ts">['+ts+']</span> <span class="msg"></span>';
+  d.querySelector(".msg").textContent=o.m;
+  box.appendChild(d); box.scrollTop=box.scrollHeight;
+  var cn=document.getElementById("streamCount"); if(cn) cn.textContent="satır: "+(box.children.length);
+  beep(o.c==="warn"?660:o.c==="q"?440:780, 0.035, 0.022);
+}
+function startStream(){
+  if(streamStarted) return; streamStarted=true;
+  var sc=document.getElementById("streamClock");
+  var t0=Date.now();
+  var timer=setInterval(function(){
+    if(sc){ var s=Math.floor((Date.now()-t0)/1000); sc.textContent=two(Math.floor(s/3600))+":"+two(Math.floor(s/60)%60)+":"+two(s%60); }
+  },1000);
+  (function feed(){
+    if(streamIdx>=STREAM.length){
+      var n=document.getElementById("streamNote"); if(n) n.textContent="akış durdu — cevap bekleniyor";
+      return;
+    }
+    streamLine(STREAM[streamIdx++]);
+    setTimeout(feed, 1600+Math.random()*1400);
+  })();
+}
+
+/* ---------------- REVEAL ---------------- */
+var io=new IntersectionObserver(function(es){
+  es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } });
+},{threshold:0.12});
+function scanReveal(){ document.querySelectorAll(".rv:not(.in)").forEach(function(el){ io.observe(el); }); }
+scanReveal();
+
+/* ---------------- SAYAÇLAR ---------------- */
+var cio=new IntersectionObserver(function(es){
+  es.forEach(function(e){
+    if(!e.isIntersecting) return;
+    var el=e.target, to=parseInt(el.getAttribute("data-count"),10)||0, cur=0;
+    cio.unobserve(el);
+    var iv=setInterval(function(){
+      cur++; el.textContent=cur;
+      if(cur>=to) clearInterval(iv);
+    }, 55);
+  });
+},{threshold:0.4});
+document.querySelectorAll("[data-count]").forEach(function(el){ cio.observe(el); });
+
+/* ---------------- RESİM YÜKLEME (kayıp kare) ---------------- */
+document.querySelectorAll(".frame img").forEach(function(img){
+  img.addEventListener("error",function(){ img.closest(".frame").classList.add("lost"); });
+  img.addEventListener("load",function(){ img.closest(".frame").classList.remove("lost"); });
+});
+document.querySelectorAll(".acard video").forEach(function(v){
+  v.addEventListener("error",function(){ v.closest(".acard").classList.add("lost"); });
+  v.addEventListener("loadeddata",function(){ v.closest(".acard").classList.remove("lost"); });
+});
+
+/* ---------------- LIGHTBOX ---------------- */
+var lb=document.getElementById("lb"), lbi=document.getElementById("lbi"), lbl=document.getElementById("lbl");
+var lbIdx=0, lbImgs=[];
+document.querySelectorAll(".frame").forEach(function(f,i){
+  f.addEventListener("click",function(){
+    var im=f.querySelector("img");
+    if(!im || f.classList.contains("lost")) { beep(160,0.09,0.03,"sawtooth"); return; }
+    lbImgs=lbImgs.length?lbImgs:[].slice.call(document.querySelectorAll(".frame img"));
+    lbIdx=lbImgs.indexOf(im); if(lbIdx<0) lbIdx=i;
+    showLb();
+  });
+});
+function showLb(){
+  var im=lbImgs[lbIdx]; if(!im) return;
+  lbi.src=im.src; lbl.textContent="KARE F-"+two(lbIdx+1)+" / "+two(lbImgs.length);
+  lb.classList.add("open"); beep(700,0.05,0.03);
+}
+document.getElementById("lbx").addEventListener("click",function(){ lb.classList.remove("open"); });
+document.getElementById("lbp").addEventListener("click",function(){ lbIdx=(lbIdx-1+lbImgs.length)%lbImgs.length; showLb(); });
+document.getElementById("lbn").addEventListener("click",function(){ lbIdx=(lbIdx+1)%lbImgs.length; showLb(); });
+lb.addEventListener("click",function(e){ if(e.target===lb) lb.classList.remove("open"); });
+
+/* ---------------- ARŞİV ARAMA ---------------- */
+var AR={
+  "c-01":"Konu kodu C-01 dosyanın her yerinde geçiyor. 8 kayıt, 5 tanık, 4 aylık boşluk hepsi buna bağlı.",
+  "cinar":"0 eşleşme. Bu dosyada «ÇINAR» geçmiyor. Konu koduyla kaydedilmiş: C-01.",
+  "çınar":"0 eşleşme. Bu dosyada «ÇINAR» geçmiyor. Konu koduyla kaydedilmiş: C-01.",
+  "ulaşın":"0 eşleşme. «ULAŞIN» da dosyada yok. Sadece C-01 ve sekiz kayıt var.",
+  "c01":"C-01 → 8 kayıt, 5 tanık, 4 ay boşluk, imza yok.",
+  "boşluk":"REC-06: 2023-04-01 → 2023-08-01. Dört ay. Sebep alanı boş bırakılmış.",
+  "ses":"REC-03: tek ses kaydı, kimseye atfedilmemiş. Ayrıca 3 dolu / 1 kayıp kanal.",
+  "imza":"Hiçbir kayıtta imza yok. Tanıklar için de 'kimlik: kayıt dışı' yazıyor.",
+  "imza yok":"Hiçbir kayıtta imza yok. Tanıklar için de 'kimlik: kayıt dışı' yazıyor.",
+  "soru":"8 soru var: SORU 01 … SORU 08. Hiçbirinin cevabı dosyada yok.",
+  "görüntü":"Kapsama %0. Görüntü dosyası yok. Boş kareler boş bırakıldı."
+};
+function doSearch(){
+  var q=(document.getElementById("q").value||"").trim().toLowerCase();
+  var out=document.getElementById("sresult");
+  if(!q){ out.innerHTML='<span class="muted">…</span>'; return; }
+  var key=null;
+  if(AR[q]) key=q;
+  else { for(var k in AR){ if(q.length>=3 && k.indexOf(q)>-1){ key=k; break; } } }
+  if(key){
+    out.innerHTML='<div class="hit">bulundu: <b>'+esc(q)+'</b><br>'+esc(AR[key])+'</div>';
+    beep(900,0.05,0.03);
+  }else{
+    out.innerHTML='<div class="miss">0 eşleşme: «'+esc(q)+'»<br>Arşivde bu kelime yok. Sadece 8 kayıt, 5 tanık ve bir konu kodu var.</div>';
+    beep(150,0.12,0.035,"sawtooth");
+  }
+}
+document.getElementById("qbtn").addEventListener("click",doSearch);
+document.getElementById("q").addEventListener("keydown",function(e){ if(e.key==="Enter") doSearch(); });
+
+/* ---------------- TANIK DEFTERİ ---------------- */
+var GBKEY="c01_guestbook_v1";
+function esc(s){ return String(s).replace(/[&<>"']/g,function(c){
+  return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+function loadGb(){ try{ return JSON.parse(localStorage.getItem(GBKEY))||[]; }catch(e){ return []; } }
+function saveGb(a){ try{ localStorage.setItem(GBKEY,JSON.stringify(a)); }catch(e){} }
+function renderGb(){
+  var box=document.getElementById("gbEntries"), arr=loadGb();
+  if(!arr.length){ box.innerHTML='<div style="color:#4d5f66;font-size:12.5px">defter boş — henüz kimse bir şey yazmamış</div>'; return; }
+  box.innerHTML = arr.slice().reverse().map(function(e){
+    return '<div class="e"><div class="em">'+esc(e.n||"[kimlik yok]")+'</div><div class="et">'+esc(e.t)+'</div><div class="ed">'+esc(e.d)+'</div></div>';
+  }).join("");
+}
+document.getElementById("gbForm").addEventListener("submit",function(ev){
+  ev.preventDefault();
+  var n=document.getElementById("gbName").value.trim();
+  var t=document.getElementById("gbText").value.trim();
+  if(!t){ beep(140,0.12,0.035,"sawtooth"); return; }
+  var d=new Date();
+  var arr=loadGb();
+  arr.push({n:n||"[kimlik yok]", t:t, d:two(d.getDate())+"."+two(d.getMonth()+1)+"."+d.getFullYear()+" "+two(d.getHours())+":"+two(d.getMinutes())});
+  saveGb(arr); renderGb();
+  document.getElementById("gbText").value="";
+  beep(1020,0.07,0.035); beep(1360,0.09,0.03);
+});
+renderGb();
+
+/* ---------------- TERMINAL ---------------- */
+var tp=document.getElementById("termPanel"), tin=document.getElementById("termIn"), tout=document.getElementById("termOut");
+var termOpen=false, termTouched=false, termAutoClose=null;
+function tOut(html, cls){ var d=document.createElement("div"); if(cls) d.className=cls; d.innerHTML=html; tout.appendChild(d); tout.scrollTop=tout.scrollHeight; }
+function openTerminal(opts){
+  termOpen=true; tp.classList.add("open"); document.getElementById("termBtn").classList.add("on");
+  if(!tout.children.length){
+    tOut("C-01 shell v1.0 — oturum: gözlemci (kimlik yok)","muted");
+    tOut("Bu dosyanın içindesin. Komut yazabilirsin. <span class=\"muted\">help</span> liste için.","muted");
+  }
+  /* teaser modunda odaklama YAPMA: odaklanmak termTouched'i tetikler ve
+     otomatik kapanma calismaz -> terminal icerigi kapatir */
+  if(!(opts && opts.noFocus)) setTimeout(function(){ tin.focus(); },120);
+}
+function closeTerminal(){
+  termOpen=false; tp.classList.remove("open"); document.getElementById("termBtn").classList.remove("on");
+  if(termAutoClose){ clearTimeout(termAutoClose); termAutoClose=null; }
+}
+document.getElementById("termBtn").addEventListener("click",function(){ termTouched=true; termOpen?closeTerminal():openTerminal(); });
+document.getElementById("termClose").addEventListener("click",function(){ termTouched=true; closeTerminal(); });
+document.getElementById("openTermBtn").addEventListener("click",function(){ termTouched=true; openTerminal(); document.getElementById("termPanel").scrollIntoView(); });
+document.getElementById("openStreamBtn").addEventListener("click",function(){ startStream(); document.getElementById("streamSec").scrollIntoView({behavior:"smooth"}); });
+
+var RECORDS=[
+  "REC-01 · İlk Satır · 2019-11-02 — isim soruldu, numara verildi: C-01",
+  "REC-02 · İlk Hareket · 2019-11-02 — kayıt 4 saniye geç başladı",
+  "REC-03 · Tek Ses · 2021-06-18 — ses kimseye atfedilmedi",
+  "REC-04 · Üç Kez · 2022-03-02 — aynı satır 3 kez, üçüncüsünde 'biliyorum'",
+  "REC-05 · Tarih Hatası · 2023-01-09 — geri alındı, içerik silindi",
+  "REC-06 · Dört Ay Boşluk · 2023-04 → 2023-08 — sebep alanı boş",
+  "REC-07 · Geri Dönüş · 2023-08-01 — aynı gün, aynı saat, aynı kare",
+  "REC-08 · Bugün · 2026-11-02 — sebep: doğum günü. doğrulama gelmedi"
+];
+var CMD={
+  help:function(){
+    tOut("<span class=\"ok\">komutlar:</span>");
+    tOut("  <span class=\"ok\">help</span> — bu liste");
+    tOut("  <span class=\"ok\">subject</span> — konu kodunun özeti");
+    tOut("  <span class=\"ok\">kayitlar</span> — 8 kaydın listesi");
+    tOut("  <span class=\"ok\">find &lt;ad&gt;</span> — arşivde ara (örn: find cinar)");
+    tOut("  <span class=\"ok\">who</span> — bu oturumu kim açtı?");
+    tOut("  <span class=\"ok\">sorular</span> — cevapsız kalan sorular");
+    tOut("  <span class=\"ok\">kapat</span> — dosyayı kapat");
+    tOut("  <span class=\"ok\">clear</span> — ekranı temizle");
+  },
+  subject:function(){
+    tOut("konu: <span class=\"ok\">C-01</span>");
+    tOut("kayıt: 8 &nbsp;·&nbsp; tanık: 5 &nbsp;·&nbsp; boşluk: 4 ay &nbsp;·&nbsp; kapsama: %0 &nbsp;·&nbsp; imza: yok");
+    tOut("isim: <span class=\"err\">dosyada geçmiyor</span>","muted");
+  },
+  kayitlar:function(){ RECORDS.forEach(function(r){ tOut("  "+r); }); },
+  "kayıtlar":function(){ RECORDS.forEach(function(r){ tOut("  "+r); }); },
+  who:function(){
+    tOut("bu oturumu açan: <span class=\"err\">bilinmiyor</span>");
+    tOut("dosyada yazan tek şey: <i>\"gözlemci\"</i>. İsim yok. İmza yok.","muted");
+  },
+  sorular:function(){
+    tOut("cevapsız sorular: <span class=\"err\">8</span>");
+    tOut("  SORU 01 … SORU 08 — hepsi kayıtların içinde","muted");
+    tOut("  cevabı olan tek soru: <i>\"içeriği belirsiz, dosya hala açık.\"</i>");
+  },
+  kapat:function(){ openOverlay(); tOut("dosya kapatılıyor…","muted"); },
+  clear:function(){ tout.innerHTML=""; }
+};
+function runCmd(raw){
+  var line=raw.trim();
+  tOut("<span class=\"in-echo\">› "+esc(line)+"</span>");
+  if(!line) return;
+  var low=line.toLowerCase();
+  if(low==="find"){ tOut("kullanım: find &lt;ad&gt;","muted"); return; }
+  if(low.indexOf("find ")===0){
+    var q=line.slice(5).trim().toLowerCase();
+    var found=null;
+    for(var k in AR){ if(k===q || (q.length>=3 && k.indexOf(q)>-1)){ found=k; break; } }
+    if(found){ tOut("bulundu → <span class=\"ok\">"+esc(AR[found])+"</span>"); beep(900,0.05,0.03); }
+    else { tOut("0 eşleşme: <span class=\"err\">"+esc(q)+"</span>","err"); tOut("arşivde sadece 8 kayıt, 5 tanık ve C-01 var.","muted"); beep(150,0.12,0.035,"sawtooth"); }
+    return;
+  }
+  if(low==="cinar" || low==="çınar" || low==="ulaşin" || low==="ulaşın"){
+    tOut("<span class=\"err\">0 eşleşme.</span>","err");
+    tOut("Bu dosyada «"+esc(line)+"» yok. Konu koduyla kaydedilmiş: <span class=\"ok\">C-01</span>");
+    beep(150,0.12,0.035,"sawtooth"); return;
+  }
+  if(CMD[low]){ CMD[low](); return; }
+  tOut("komut yok: <span class=\"err\">"+esc(line)+"</span>","err");
+  tOut("list için: <span class=\"ok\">help</span>","muted");
+  beep(150,0.1,0.03,"sawtooth");
+}
+tin.addEventListener("keydown",function(e){
+  if(e.key==="Enter"){ termTouched=true; runCmd(tin.value); tin.value=""; }
+  else if(e.key==="Escape"){ closeTerminal(); }
+});
+tin.addEventListener("focus",function(){ termTouched=true; });
+
+/* ---------------- SES TOGGLE ---------------- */
+var sndBtn=document.getElementById("sndBtn");
+sndBtn.addEventListener("click",function(){
+  soundOn=!soundOn;
+  sndBtn.textContent="SES: "+(soundOn?"AÇIK":"KAPALI");
+  sndBtn.classList.toggle("on",soundOn);
+  if(soundOn) beep(900,0.06,0.03);
+});
+sndBtn.classList.add("on");
+
+/* ---------------- OVERLAY ---------------- */
+var ov=document.getElementById("overlay");
+function openOverlay(){ ov.classList.add("open"); beep(220,0.2,0.035,"sawtooth"); }
+document.getElementById("closeBtn").addEventListener("click",openOverlay);
+document.getElementById("reopenBtn").addEventListener("click",function(){ ov.classList.remove("open"); beep(760,0.07,0.03); });
+
+/* ---------------- GLOBAL ---------------- */
+document.addEventListener("click",function(){ unlockAudio(); },{once:true});
+document.addEventListener("keydown",function(e){
+  if(e.key==="Escape"){ lb.classList.remove("open"); ov.classList.remove("open"); }
+  if(e.key==="`"){ termOpen?closeTerminal():openTerminal(); }
+  if(e.key==="ArrowLeft" && lb.classList.contains("open")) document.getElementById("lbp").click();
+  if(e.key==="ArrowRight" && lb.classList.contains("open")) document.getElementById("lbn").click();
+});
+window.addEventListener("scroll",function(){ /* parallax yok: sabit CRT katmanları yeterli */ },{passive:true});
+
+/* ---------------- DIŞ API (C-01 shell) ----------------
+   Tema geregi meraklılar için: konsoldan C01.* denenebilir. */
+window.C01={
+  open:openTerminal,
+  close:closeTerminal,
+  records:RECORDS,
+  arsiv:AR,
+  subject:function(){ return {konu:"C-01", kayit:8, tanik:5, bosluk_ay:4, kapsama:0, imza:null}; },
+  kapat:openOverlay,
+  kayit:function(n){ streamLine({m:n||"manuel kayit eklendi", c:"warn"}); }
+};
+
+})();
+</script>
+</body>
+</html>
