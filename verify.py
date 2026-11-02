@@ -156,13 +156,21 @@ with sync_playwright() as pw:
 
     # ---- HAYKO CEPKIN FINALE ----
     check("finale DOM'da", page.evaluate("!!document.getElementById('finale')"))
-    check("siluet SVG var", page.evaluate("!!document.getElementById('fig')"))
-    check("UYAAAAAN metni",
-          page.evaluate("document.getElementById('uya').textContent.trim()") == "UYAAAAAN")
-    check("C01.hayko API", page.evaluate("typeof C01.hayko === 'function'"))
-    check("duman katmani var", page.evaluate("!!document.getElementById('smoke')"))
-    check("duman silahi var (muzzle)", page.evaluate("!!document.getElementById('muzzle')"))
-    check("07 LGS butonu var", page.evaluate("!!document.getElementById('lgsBtn')"))
+    check("siluet <img>", page.evaluate("!!document.getElementById('fig')"))
+    check("fig <img> src hayko.jpg",
+          (page.evaluate("document.getElementById('fig').getAttribute('src')") or "")
+          .endswith("hayko.jpg"))
+    check("hayko.jpg yuklendi",
+          page.evaluate("!!document.getElementById('fig') && "
+                        "document.getElementById('fig').naturalWidth > 0"),
+          page.evaluate("document.getElementById('fig').naturalWidth"))
+    check("siluet filtresi", "grayscale" in page.evaluate(
+        "getComputedStyle(document.getElementById('fig')).filter"))
+    check("silah SVG (#gun)", page.evaluate("!!document.getElementById('gun')"))
+    check("duman silahi (muzzle)", page.evaluate("!!document.getElementById('muzzle')"))
+    check("duman katmani (#smoke)", page.evaluate("!!document.getElementById('smoke')"))
+    check("sisli arka plan (#fog)", page.evaluate("!!document.getElementById('fog')"))
+    check("07 LGS butonu", page.evaluate("!!document.getElementById('lgsBtn')"))
 
     # finale yeni baslat (mp3 kontrolunden sonra, temiz zamanlama)
     page.evaluate("C01.hayko()")

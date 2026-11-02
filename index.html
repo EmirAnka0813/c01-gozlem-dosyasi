@@ -301,18 +301,36 @@ section{position:relative;z-index:2}
   mix-blend-mode:overlay;
 }
 
-/* siluet: koyu govde, parlak kenar ışigi (referans: siyah figur, sisli arka plan) */
-#fig{
+/* figur + silah ortak kapsayicida birebir hizali */
+#figwrap{
   position:relative;z-index:2;width:min(78vw,520px);aspect-ratio:.62;
-  filter:drop-shadow(0 0 60px rgba(255,180,84,.12));
+}
+#fig{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;object-position:50% 22%;
+  /* kaynak kare çok karanlık -> guclu kontrast + aydinlatma */
+  filter:grayscale(1) contrast(2.6) brightness(1.15) drop-shadow(0 0 60px rgba(255,180,84,.14));
   animation:figIn 2.4s cubic-bezier(.16,.9,.3,1) both, breathe 7s ease-in-out 2.4s infinite;
 }
 @keyframes figIn{
-  0%{opacity:0;transform:scale(1.35) translateY(4%);filter:blur(26px) drop-shadow(0 0 0 transparent)}
-  55%{opacity:1;transform:scale(1.06) translateY(0);filter:blur(4px)}
-  100%{opacity:1;transform:scale(1);filter:blur(0)}
+  0%{opacity:0;transform:scale(1.35) translateY(4%);filter:blur(26px) grayscale(1) contrast(2.6) brightness(1.15)}
+  55%{opacity:1;transform:scale(1.06) translateY(0);filter:blur(4px) grayscale(1) contrast(2.6) brightness(1.15)}
+  100%{opacity:1;transform:scale(1);filter:blur(0) grayscale(1) contrast(2.6) brightness(1.15)}
 }
 @keyframes breathe{0%,100%{transform:scale(1) translateY(0)}50%{transform:scale(1.018) translateY(-1.2%)}}
+/* kenar isigi */
+#fig::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(100deg,rgba(255,180,84,.34) 0%,transparent 26%,
+             transparent 74%,rgba(94,242,160,.28) 100%);
+  mix-blend-mode:screen;
+}
+/* duman silahi: fotografin uzerinde, ayni cerceve/pozisyon */
+#gun{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;object-position:50% 18%;
+  pointer-events:none;
+}
 /* isik halkasi arkada */
 #halo{
   position:absolute;z-index:1;width:min(92vw,720px);aspect-ratio:1;border-radius:50%;
@@ -788,128 +806,24 @@ footer .stamp{border:1px solid var(--line);padding:14px 16px;margin-top:20px;fon
   <canvas id="fcanvas"></canvas>
   <div id="halo"></div>
 
-  <svg id="fig" viewBox="0 0 300 480" aria-label="Hayko Cepkin silueti">
-    <defs>
-      <linearGradient id="gBody" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#93a3ae"/>
-        <stop offset="24%" stop-color="#455560"/>
-        <stop offset="58%" stop-color="#1c252c"/>
-        <stop offset="100%" stop-color="#080c10"/>
-      </linearGradient>
-      <linearGradient id="gEdge" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="#fff0d6" stop-opacity="1"/>
-        <stop offset="20%" stop-color="#ffc169" stop-opacity=".55"/>
-        <stop offset="80%" stop-color="#7ff5bb" stop-opacity=".5"/>
-        <stop offset="100%" stop-color="#c8ffe0" stop-opacity="1"/>
-      </linearGradient>
-      <filter id="soft"><feGaussianBlur stdDeviation="1.4"/></filter>
-      <filter id="rim" x="-30%" y="-30%" width="160%" height="160%">
-        <feGaussianBlur stdDeviation="3.2" result="b"/>
-        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-    </defs>
-    <!-- ===== UZUN DAGINIK SAC (govde ile birlestirilmis, dolu kitle) ===== -->
-    <path fill="#131c23" stroke="url(#gEdge)" stroke-width="1.8" d="
-      M150 20
-      C 190 20 212 44 214 80
-      C 216 112 210 138 206 162
-      C 203 192 202 228 204 266
-      C 206 306 205 344 203 378
-      L 170 376
-      C 175 340 175 302 173 264
-      C 171 226 173 192 175 164
-      L 125 164
-      C 127 192 129 226 127 264
-      C 125 302 125 340 130 376
-      L 97 378
-      C 95 344 94 306 96 266
-      C 98 228 97 192 94 162
-      C 90 138 84 112 86 80
-      C 88 44 110 20 150 20 Z"/>
-    <!-- sac telleri: kirpikli, dalgin uclar -->
-    <g stroke="url(#gEdge)" stroke-width="1.1" fill="none" opacity=".55">
-      <path d="M104 92 C 96 150 100 250 108 356"/>
-      <path d="M118 104 C 112 166 116 258 122 350"/>
-      <path d="M196 92 C 204 150 200 250 192 356"/>
-      <path d="M182 104 C 188 166 184 258 178 350"/>
-    </g>
-
-    <!-- govde tabani: gradyanin uzerine duz koyu dolgu (silueti tam kapatir) -->
-    <path fill="#151d24" d="
-      M150 96 C 176 96 194 110 204 128 C 212 144 214 172 215 206
-      C 217 248 218 296 216 340 C 215 366 212 396 208 424
-      L 176 428 C 171 394 166 352 162 316 C 158 352 153 394 148 428
-      L 116 424 C 112 396 109 366 108 340 C 106 296 107 248 110 206
-      C 111 172 112 144 120 128 C 130 110 124 96 150 96 Z"/>
-    <!-- sac tabani -->
-    <path fill="#0e161c" d="
-      M150 20 C 190 20 212 44 214 80 C 216 112 210 138 206 162
-      C 203 192 202 228 204 266 C 206 306 205 344 203 378
-      L 170 376 C 175 340 175 302 173 264 C 171 226 173 192 175 164
-      L 125 164 C 127 192 129 226 127 264 C 125 302 125 340 130 376
-      L 97 378 C 95 344 94 306 96 266 C 98 228 97 192 94 162
-      C 90 138 84 112 86 80 C 88 44 110 20 150 20 Z"/>
-
-    <!-- ===== GOVDE: siyah kiyfet, genis omuz, yukarida sacla birlesir ===== -->
-    <path fill="url(#gBody)" stroke="url(#gEdge)" stroke-width="2.6" filter="url(#rim)" d="
-      M150 96
-      C 176 96 194 110 204 128
-      C 212 144 214 172 215 206
-      C 217 248 218 296 216 340
-      C 215 366 212 396 208 424
-      L 176 428
-      C 171 394 166 352 162 316
-      C 158 352 153 394 148 428
-      L 116 424
-      C 112 396 109 366 108 340
-      C 106 296 107 248 110 206
-      C 111 172 112 144 120 128
-      C 130 110 124 96 150 96 Z"/>
-    <!-- yaka: acik bir yaka hatti -->
-    <path d="M126 138 C 142 148 158 148 174 138" fill="none" stroke="rgba(255,180,84,.3)" stroke-width="1.6"/>
-    <!-- kemer/etek detayi -->
-    <path d="M112 232 C 140 240 162 240 214 230" fill="none" stroke="rgba(255,180,84,.16)" stroke-width="1.2"/>
-
-    <!-- ===== SOL KOL: yuzun yanina kalkiyor (referans poz) ===== -->
-    <path fill="url(#gBody)" stroke="url(#gEdge)" stroke-width="1.8" filter="url(#soft)" d="
-      M126 140
-      C 110 156 100 182 98 206
-      C 97 220 102 230 110 232
-      C 120 234 126 226 124 214
-      C 122 198 126 176 136 158 Z"/>
-    <!-- yumruk: yuzun yaninda -->
-    <ellipse cx="112" cy="222" rx="14" ry="12" fill="#101820" stroke="url(#gEdge)" stroke-width="1.6" filter="url(#soft)"/>
-
-    <!-- ===== SAG KOL: asagi, silahi tutuyor ===== -->
-    <path fill="url(#gBody)" stroke="url(#gEdge)" stroke-width="1.8" filter="url(#soft)" d="
-      M196 142 C 206 166 210 200 210 232 C 210 250 208 258 204 266
-      L 186 262 C 190 248 192 232 190 210 C 188 180 184 158 176 146 Z"/>
-    <!-- silah tutan el -->
-    <ellipse cx="196" cy="266" rx="13" ry="11" fill="#101820" stroke="url(#gEdge)" stroke-width="1.6" filter="url(#soft)"/>
-
-    <!-- ===== KAFA: yuz yana, profil ===== -->
-    <ellipse cx="150" cy="72" rx="25" ry="29" fill="url(#gBody)" stroke="url(#gEdge)" stroke-width="1.8" filter="url(#soft)"/>
-    <!-- profil: burn + cene -->
-    <path fill="#0b1116" d="M173 61 C 181 63 183 72 179 80 C 175 89 168 93 162 93 L 160 80 C 168 78 173 69 173 61 Z"/>
-    <!-- goz: tek parlak nokta -->
-    <circle cx="160" cy="65" r="2.8" fill="#ffb454" opacity=".95"/>
-    <!-- yumrukla birlesen kollar (yuz onu) -->
-    <ellipse cx="118" cy="216" rx="9" ry="8" fill="#141c24" opacity=".9"/>
-
-    <!-- ===== DUMAN SILAHI (sag el) ===== -->
-    <g transform="translate(203 266) rotate(-16)">
-      <rect x="0" y="-6.5" width="86" height="13" rx="3" fill="#0c1216" stroke="url(#gEdge)" stroke-width="1.8"/>
-      <rect x="84" y="-9.5" width="10" height="19" rx="2" fill="#141c22" stroke="url(#gEdge)" stroke-width="1.6"/>
-      <path d="M6 6 L6 29 L-5 29 L-5 6 Z" fill="#080d11" stroke="rgba(255,180,84,.3)" stroke-width="1.2"/>
-      <path d="M14 7 Q 25 17 19 25" fill="none" stroke="rgba(255,180,84,.34)" stroke-width="1.6"/>
-      <!-- namludan cikan duman -->
+<!-- siluet: gercek fotograf (public/hayko.jpg) -> CSS ile siluete cevrilir -->
+<div id="figwrap">
+  <img id="fig" src="public/hayko.jpg" alt="Hayko Cepkin">
+  <!-- duman silahi: fotografin uzerinde, sag elde -->
+  <svg id="gun" viewBox="0 0 300 480" aria-hidden="true">
+    <g transform="translate(186 322) rotate(-12)">
+      <rect x="0" y="-6" width="76" height="12" rx="3" fill="#0a0f13" stroke="rgba(255,180,84,.6)" stroke-width="1.8"/>
+      <rect x="74" y="-9" width="9" height="18" rx="2" fill="#131b21" stroke="rgba(255,180,84,.55)" stroke-width="1.6"/>
+      <path d="M5 5 L5 26 L-5 26 L-5 5 Z" fill="#070b0e" stroke="rgba(255,180,84,.45)" stroke-width="1.2"/>
+      <path d="M13 6 Q 22 14 17 22" fill="none" stroke="rgba(255,180,84,.45)" stroke-width="1.6"/>
       <g id="muzzle">
-        <ellipse cx="104" cy="0" rx="21" ry="14" fill="#cfd8dc" opacity=".22"/>
-        <ellipse cx="120" cy="-4" rx="25" ry="16" fill="#e2e9ec" opacity=".16"/>
-        <ellipse cx="138" cy="3" rx="29" ry="18" fill="#cfd8dc" opacity=".11"/>
+        <ellipse cx="93" cy="0" rx="19" ry="12" fill="#cfd8dc" opacity=".24"/>
+        <ellipse cx="107" cy="-4" rx="23" ry="14" fill="#e2e9ec" opacity=".16"/>
+        <ellipse cx="123" cy="3" rx="26" ry="16" fill="#cfd8dc" opacity=".1"/>
       </g>
     </g>
   </svg>
+</div>
 
   <div id="uya">UYAAAAAN</div>
   <div id="sub">HAYKO CEPKİN — DOSYA SONU</div>
