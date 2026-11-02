@@ -2,20 +2,47 @@
 """C-01 Gozlem Dosyasi - kanonik dogrulama.
 
 Kullanim:
-    python verify.py <url>
+    python verify.py                 # yerel sunucuyu kendisi acar, sonra kapatir
+    python verify.py <url>           # verilen URL'yi dogrular (canli)
 
-Varsayilan: http://127.0.0.1:8099/index.html
 Kapsam: boot, h1 a11y, icerik, 6 fotograf + video yok, motor kuluubu (5 isim),
 LGS kaydi, terminal komutlari, arama, tanik defteri, overlay,
 Hayko Cepkin finali (siluet/UYAAAAAN/mp3/GEÇ), yatay tasma, js hatasi, 404.
 """
+import atexit
+import os
+import socket
+import subprocess
 import sys
 import time
 
 from playwright.sync_api import sync_playwright
 
-URL = sys.argv[1] if len(sys.argv) > 1 else "http://127.0.0.1:8099/index.html"
+BASE = os.path.dirname(os.path.abspath(__file__))
 P, F = [], []
+
+
+def _serve():
+    """Gecici statik sunucu ac -> url. Otomatik kapanir."""
+    with socket.socket() as s:
+        s.bind(("127.0.0.1", 0))
+        port = s.getsockname()[1]
+    proc = subprocess.Popen(
+        [sys.executable, "-m", "http.server", str(port), "--bind", "127.0.0.1"],
+        cwd=BASE, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    atexit.register(proc.kill)
+    for _ in range(80):
+        try:
+            with socket.create_connection(("127.0.0.1", port), timeout=0.3):
+                return "http://127.0.0.1:%d/index.html" % port
+        except OSError:
+            time.sleep(0.1)
+    proc.kill()
+    raise SystemExit("yerel sunucu acilamadi")
+
+
+URL = sys.argv[1] if len(sys.argv) > 1 else _serve()
+print("DOGRULAMA: " + URL)
 
 
 def check(name, cond, detail=""):

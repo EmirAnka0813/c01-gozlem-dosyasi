@@ -1,0 +1,14 @@
+{
+  "name": "c01-gozlem-dosyasi",
+  "version": "1.0.0",
+  "private": true,
+  "description": "C-01 Gozlem Dosyasi - Hayko Cepkin finali olan dogum gunu gozlem dosyasi",
+  "scripts": {
+    "test": "python verify.py",
+    "test:live": "python verify.py https://emiranka0813.github.io/c01-gozlem-dosyasi/index.html",
+    "serve": "python -m http.server 8099 --bind 127.0.0.1",
+    "prep:img": "python prep_hayko_img.py",
+    "prep:audio": "python prep_audio.py",
+    "prep:photos": "python prep_photos.py"
+  }
+}
