@@ -217,20 +217,6 @@ section{position:relative;z-index:2}
 .frame .no{position:absolute;top:8px;left:10px;font-size:10px;color:rgba(255,180,84,.75);z-index:2;letter-spacing:.14em}
 
 /* ---------- SES KAYITLARI ---------- */
-.audio-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-.acard{border:1px solid var(--line);background:rgba(255,255,255,.014);padding:18px}
-.acard .ah{display:flex;gap:12px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
-.acard .dur{font-size:11px;color:var(--green);border:1px solid var(--line2);padding:2px 8px}
-.acard h4{margin:0;font-size:12.5px;letter-spacing:.16em;color:#cfe0e4;text-transform:uppercase}
-.acard video{width:100%;background:#000;border:1px solid rgba(255,255,255,.07);display:block}
-.acard.lost video{display:none}
-.acard .lostbox{
-  display:none;border:1px dashed rgba(255,95,86,.35);padding:26px 14px;text-align:center;
-  color:#ff9a94;font-size:11.5px;letter-spacing:.16em;background:rgba(255,95,86,.05)
-}
-.acard.lost .lostbox{display:block}
-
-/* ---------- TANIKLAR ---------- */
 .wit{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .wcard{border:1px solid var(--line);padding:20px;background:rgba(255,255,255,.014);position:relative;transition:.3s}
 .wcard:hover{border-color:var(--line2);background:rgba(94,242,160,.03)}
@@ -344,7 +330,6 @@ footer .stamp{border:1px solid var(--line);padding:14px 16px;margin-top:20px;fon
   .dossier{grid-template-columns:repeat(2,1fr)}
   .frames{grid-template-columns:repeat(2,1fr)}
   .wit{grid-template-columns:1fr}
-  .audio-grid{grid-template-columns:1fr}
   .hero{min-height:auto;padding:44px 0 56px}
   .searchbox{grid-template-columns:1fr}
   .searchbox button{border-left:0;border-top:1px solid var(--line);padding:12px}
@@ -411,7 +396,7 @@ footer .stamp{border:1px solid var(--line);padding:14px 16px;margin-top:20px;fon
       <span class="chip">TANIK: <b>5</b></span>
       <span class="chip">BOŞLUK: <b>4 ay</b></span>
       <span class="chip warn">İMZA: <b>YOK</b></span>
-      <span class="chip ok">KAPSAMA: <b>%0</b></span>
+      <span class="chip ok">KAPSAMA: <b>%6</b></span>
     </div>
     <div class="acts">
       <button class="btn" id="openStreamBtn">KAYDI AÇ</button>
@@ -430,7 +415,7 @@ footer .stamp{border:1px solid var(--line);padding:14px 16px;margin-top:20px;fon
     <div class="dcell"><div class="lbl">TEKRAR YAZIM</div><div class="val v" data-count="3">0</div><div class="note">aynı satır, 3 kez</div></div>
     <div class="dcell"><div class="lbl">SONRAKİ GÖZLEM</div><div class="val">--:--</div><div class="note">hesaplanamadı</div></div>
     <div class="dcell warn"><div class="lbl">KARAR</div><div class="val r" style="font-size:19px">BELİRTİLMEDİ</div><div class="note">alan boş</div></div>
-    <div class="dcell"><div class="lbl">GÖRÜNTÜ KAPSAMA</div><div class="val">%0</div><div class="note">kamera: yok</div></div>
+    <div class="dcell"><div class="lbl">GÖRÜNTÜ KAPSAMA</div><div class="val">%6</div><div class="note">6 kare / 6 kanal</div></div>
     <div class="dcell"><div class="lbl">İMZA</div><div class="val" style="font-size:19px">YOK</div><div class="note">gözlemci: —</div></div>
   </div>
 </section>
@@ -524,46 +509,32 @@ footer .stamp{border:1px solid var(--line);padding:14px 16px;margin-top:20px;fon
 <section class="pad">
   <div class="sec-h rv"><span class="n">04</span><span class="t">Kapsanan Kareler</span><span class="rule"></span></div>
   <p class="rv" style="color:#7e9197;font-size:13.5px;margin:-14px 0 22px">
-    Kapsama oranı %0. Bu dosyadan görüntü çekilmemiş. Boş yerler boş bırakıldı — doldurulmadı.
+    Altı kare. Hepsi aynı özneye ait: <b>C-01</b>. Dosyada kim olduğu yazmıyor —
+    sadece motorun üstünde oturan, karanlık montlu, gözlüklü ve kanepeye uzanmış hâlleri var.
   </p>
   <div class="frames rv" id="frames">
-    <div class="frame" data-i="0"><span class="no">F-01</span><img src="photos/photo1.jpg" alt="Çerçeve 1"><div class="fb"><span class="q">KARAR YOK</span><span>KAPSANAMADI</span></div></div>
-    <div class="frame" data-i="1"><span class="no">F-02</span><img src="photos/photo2.jpg" alt="Çerçeve 2"><div class="fb"><span class="q">KARAR YOK</span><span>KAPSANAMADI</span></div></div>
-    <div class="frame" data-i="2"><span class="no">F-03</span><img src="photos/photo3.jpg" alt="Çerçeve 3"><div class="fb"><span class="q">KARAR YOK</span><span>KAPSANAMADI</span></div></div>
-    <div class="frame" data-i="3"><span class="no">F-04</span><img src="photos/photo4.jpg" alt="Çerçeve 4"><div class="fb"><span class="q">KARAR YOK</span><span>KAPSANAMADI</span></div></div>
-    <div class="frame" data-i="4"><span class="no">F-05</span><img src="photos/photo5.jpg" alt="Çerçeve 5"><div class="fb"><span class="q">KARAR YOK</span><span>KAPSANAMADI</span></div></div>
-    <div class="frame" data-i="5"><span class="no">F-06</span><img src="photos/photo6.jpg" alt="Çerçeve 6"><div class="fb"><span class="q">KARAR YOK</span><span>KAPSANAMADI</span></div></div>
-    <div class="frame" data-i="6"><span class="no">F-07</span><img src="photos/photo7.jpg" alt="Çerçeve 7"><div class="fb"><span class="q">KARAR YOK</span><span>KAPSANAMADI</span></div></div>
-    <div class="frame" data-i="7"><span class="no">F-08</span><img src="photos/photo8.jpg" alt="Çerçeve 8"><div class="fb"><span class="q">KARAR YOK</span><span>KAPSANAMADI</span></div></div>
+    <div class="frame" data-i="0"><span class="no">F-01</span><img src="photos/photo1.jpg" alt="Motorsikletin üstünde, karanlık montlu"><div class="fb"><span class="q">KARAR YOK</span><span>KAPSANAMADI</span></div></div>
+    <div class="frame" data-i="1"><span class="no">F-02</span><img src="photos/photo2.jpg" alt="Ayakta, karanlık puffer mont"><div class="fb"><span class="q">KARAR YOK</span><span>KAPSANAMADI</span></div></div>
+    <div class="frame" data-i="2"><span class="no">F-03</span><img src="photos/photo3.jpg" alt="Kırmızı ışık altında, kapüşonlu mont"><div class="fb"><span class="q">KARAR YOK</span><span>KAPSANAMADI</span></div></div>
+    <div class="frame" data-i="3"><span class="no">F-04</span><img src="photos/photo4.jpg" alt="İç mekânda, gri-siyah kapüşonlu"><div class="fb"><span class="q">KARAR YOK</span><span>KAPSANAMADI</span></div></div>
+    <div class="frame" data-i="4"><span class="no">F-05</span><img src="photos/photo5.jpg" alt="Takım elbise ve güneş gözlüğü"><div class="fb"><span class="q">KARAR YOK</span><span>KAPSANAMADI</span></div></div>
+    <div class="frame" data-i="5"><span class="no">F-06</span><img src="photos/photo6.jpg" alt="Kanepeye uzanmış, gri-siyah kapüşonlu"><div class="fb"><span class="q">KARAR YOK</span><span>KAPSANAMADI</span></div></div>
   </div>
 </section>
 
-<!-- ============ SES KAYITLARI ============ -->
+<!-- ============ MOTOR ARKADAŞLARI ============ -->
 <section class="pad">
-  <div class="sec-h rv"><span class="n">05</span><span class="t">Ses Kayıtları</span><span class="rule"></span></div>
+  <div class="sec-h rv"><span class="n">05</span><span class="t">Motor Kulübü</span><span class="rule"></span></div>
   <p class="rv" style="color:#7e9197;font-size:13.5px;margin:-14px 0 22px">
-    Dört kanal. Üçü dolu, biri kayıp. Kaybın yerine de uydurma bir ses konmadı.
+    Dosyanın motor kanalında beş isim geçiyor. Hepsi aynı cümleyi kuruyor —
+    ama cümlenin devamı farklı. Devamı dosyada yok.
   </p>
-  <div class="audio-grid rv">
-    <div class="acard" data-a="0">
-      <div class="ah"><h4>Kanal A — Tanık 01</h4><span class="dur">00:14</span></div>
-      <video src="public/vid1.mp4" controls preload="metadata" playsinline></video>
-      <div class="lostbox">KAYIT KANALINDA YOK</div>
-    </div>
-    <div class="acard" data-a="1">
-      <div class="ah"><h4>Kanal B — Tanık 02</h4><span class="dur">00:22</span></div>
-      <video src="public/vid2.mp4" controls preload="metadata" playsinline></video>
-      <div class="lostbox">KAYIT KANALINDA YOK</div>
-    </div>
-    <div class="acard" data-a="2">
-      <div class="ah"><h4>Kanal C — Tanık 03</h4><span class="dur">00:09</span></div>
-      <video src="public/vid3.mp4" controls preload="metadata" playsinline></video>
-      <div class="lostbox">KAYIT KANALINDA YOK</div>
-    </div>
-    <div class="acard lost" data-a="3">
-      <div class="ah"><h4>Kanal D — Kayıp</h4><span class="dur">--:--</span></div>
-      <div class="lostbox">KAYIT KANALINDA YOK</div>
-    </div>
+  <div class="wit rv">
+    <div class="wcard"><div class="who">TANIK 01 — MOTOR</div><p class="q">"Gerçekten iyi bir arkadaşsın."</p><div class="sig">devamı: —</div></div>
+    <div class="wcard"><div class="who">TANIK 02 — MOTOR</div><p class="q">"Seninle yol yapmak başka, inanılmaz."</p><div class="sig">devamı: —</div></div>
+    <div class="wcard"><div class="who">TANIK 03 — MOTOR</div><p class="q">"Motorsuz olmuyor. Kesinlikle olmuyor."</p><div class="sig">devamı: —</div></div>
+    <div class="wcard"><div class="who">TANIK 04 — MOTOR</div><p class="q">"Benim en iyi arkadaşım. Başka da bu kadar iyi arkadaş yok."</p><div class="sig">devamı: —</div></div>
+    <div class="wcard"><div class="who">TANIK 05 — MOTOR</div><p class="q">"Her şeyi seninle yapmak isterim, ciddi söylüyorum."</p><div class="sig">devamı: —</div></div>
   </div>
 </section>
 
@@ -571,20 +542,36 @@ footer .stamp{border:1px solid var(--line);padding:14px 16px;margin-top:20px;fon
 <section class="pad">
   <div class="sec-h rv"><span class="n">06</span><span class="t">Tanık İfadeleri</span><span class="rule"></span></div>
   <p class="rv" style="color:#7e9197;font-size:13.5px;margin:-14px 0 22px">
-    Beş ifade. Hiçbirinin kimliği dosyada yok. Beşi de kısa — sanki daha fazlası söylenemezmiş gibi.
+    Beş ifade, beş isim. Bu sefer isimler kayıt dışı değil — dosyaya yazılmış.
+    Hepsi motor kulübünden. Hepsi aynı şeyi söylüyor, ama farklı cümlelerle.
   </p>
   <div class="wit rv">
-    <div class="wcard"><div class="who">TANIK 01 — KİMLİK: KAYIT DIŞI</div><p class="q">"İyi doğdun. Başka bir şey söylememiştim."</p><div class="sig">imza yok</div></div>
-    <div class="wcard"><div class="who">TANIK 02 — KİMLİK: KAYIT DIŞI</div><p class="q">"Tanıyorum. Bu kadar."</p><div class="sig">imza yok</div></div>
-    <div class="wcard"><div class="who">TANIK 03 — KİMLİK: KAYIT DIŞI</div><p class="q">"İyi ki varsın. Sorular da soruyor, bu arada."</p><div class="sig">imza yok</div></div>
-    <div class="wcard"><div class="who">TANIK 04 — KİMLİK: KAYIT DIŞI</div><p class="q">"Doğum günün kutlu olsun. Sadece bu."</p><div class="sig">imza yok</div></div>
-    <div class="wcard"><div class="who">TANIK 05 — KİMLİK: KAYIT DIŞI</div><p class="q">"İyi ki varsın. Gerisi dosyada."</p><div class="sig">imza yok</div></div>
+    <div class="wcard"><div class="who">TANIK 01 — KEREM</div><p class="q">"Çınar gerçekten iyi bir arkadaş. Yani öyle bir arkadaş ki, motora bindirirsin ve yolun hiç bitmez."</p><div class="sig">motor kulübü</div></div>
+    <div class="wcard"><div class="who">TANIK 02 — ARDA</div><p class="q">"Seninle yol yapmak başka. Direksiyonda sen, arkada başta sen. Yani motor senin, yol senin."</p><div class="sig">motor kulübü</div></div>
+    <div class="wcard"><div class="who">TANIK 03 — EFE</div><p class="q">"Motorsuz olmuyor bu arkadaşlık. Motorsuz olmuyor, o yüzden motor şart. Bitti."</p><div class="sig">motor kulübü</div></div>
+    <div class="wcard"><div class="who">TANIK 04 — MERT</div><p class="q">"Benim en iyi arkadaşım. Başka da bu kadar iyi arkadaş yok, kusura bakma."</p><div class="sig">motor kulübü</div></div>
+    <div class="wcard"><div class="who">TANIK 05 — BERK</div><p class="q">"Her şeyi seninle yapmak isterim. Motor da, yol da, her şey. Ciddi söylüyorum."</p><div class="sig">motor kulübü</div></div>
+  </div>
+</section>
+
+<!-- ============ LGS ============ -->
+<section class="pad">
+  <div class="sec-h rv"><span class="n">07</span><span class="t">LGS Kaydı</span><span class="rule"></span></div>
+  <div class="note rv" style="border-left-color:var(--red);background:rgba(255,95,86,.03)">
+    <p style="color:#ffb0ab">Dosyaya 2 Kasım 2026'da bir satır eklenmiş. Satır şu:</p>
+    <p style="font-size:19px;color:#fff;border-left:2px solid var(--red);padding-left:16px;margin:18px 0">
+      "LGS burada mı?"
+    </p>
+    <p>Yazan kişinin adı yok. Cevap da yok. Dosya cevap bekliyor — ama bekleyen şey
+    kim olduğunu bilmiyor, çünkü dosyada <b>C-01</b> yazıyor, Çınar değil.</p>
+    <p><span class="strike">Cevap: burada.</span> Cevap yazılmadı.</p>
+    <span class="sig">— satır 2026-11-02 21:47 · imza yok</span>
   </div>
 </section>
 
 <!-- ============ ARŞİV ARAMA ============ -->
 <section class="pad">
-  <div class="sec-h rv"><span class="n">07</span><span class="t">Arşiv Araması</span><span class="rule"></span></div>
+  <div class="sec-h rv"><span class="n">08</span><span class="t">Arşiv Araması</span><span class="rule"></span></div>
   <div class="rv">
     <div class="searchbox">
       <input id="q" type="text" placeholder="bir isim yaz…" autocomplete="off" spellcheck="false">
@@ -596,7 +583,7 @@ footer .stamp{border:1px solid var(--line);padding:14px 16px;margin-top:20px;fon
 
 <!-- ============ NOT ============ -->
 <section class="pad">
-  <div class="sec-h rv"><span class="n">08</span><span class="t">Gözlemci Notu</span><span class="rule"></span></div>
+  <div class="sec-h rv"><span class="n">09</span><span class="t">Gözlemci Notu</span><span class="rule"></span></div>
   <div class="note rv">
     <p>Bu notu dosyayı açan kişi yazdı. Adını bırakmadı.</p>
     <p>"Doğum günün kutlu olsun" cümlesini yazmam gerekiyordu. <span class="strike">Yazdım, sonra sildim.</span> Yerine konu kodu yazdım. Kod daha dürüst geldi — kimse bir numaraya kızmaz, numaralar kızmaz.</p>
@@ -608,7 +595,7 @@ footer .stamp{border:1px solid var(--line);padding:14px 16px;margin-top:20px;fon
 
 <!-- ============ TANIK DEFTERİ ============ -->
 <section class="pad">
-  <div class="sec-h rv"><span class="n">09</span><span class="t">Tanık Defteri</span><span class="rule"></span></div>
+  <div class="sec-h rv"><span class="n">10</span><span class="t">Tanık Defteri</span><span class="rule"></span></div>
   <div class="gb rv">
     <p style="margin:0 0 16px;color:#7e9197;font-size:13.5px">
       Defter açık. İstediğin yaz. Kayıt senin adınla değil, girdiğin isimle durur.
@@ -624,7 +611,7 @@ footer .stamp{border:1px solid var(--line);padding:14px 16px;margin-top:20px;fon
 
 <!-- ============ KAPANIŞ ============ -->
 <section class="pad" style="text-align:center">
-  <div class="sec-h rv" style="justify-content:center"><span class="n">10</span><span class="t">Kapanış</span><span class="rule"></span></div>
+  <div class="sec-h rv" style="justify-content:center"><span class="n">11</span><span class="t">Kapanış</span><span class="rule"></span></div>
   <p class="rv" style="color:#8ea1a7;max-width:560px;margin:0 auto 26px">
     Dosyayı kapatmak sana kalıyor. Kapattığında arşive alınacak ve bir daha açılmayacak.
     Emin misin? Aslında emin de değiliz — bu satırı da bir gözlemci yazdı.
@@ -639,7 +626,8 @@ footer .stamp{border:1px solid var(--line);padding:14px 16px;margin-top:20px;fon
   </div>
   <div class="stamp">
     Bu dosya bir doğum günü kaydı değildir. Bir gözlem dosyasıdır. Doğum günü ile ilgili bölüm,
-    kayıtların arasına saklanmıştır. Sen onu bulursan, bulmazsan — dosya yine de senindi.
+    kayıtların arasına saklanmıştır. Altı kare, beş motor arkadaşı ve bir tane cevapsız soru.
+    Sen onu bulursan, bulmazsan — dosya yine de senindi.
   </div>
 </footer>
 
@@ -668,11 +656,11 @@ footer .stamp{border:1px solid var(--line);padding:14px 16px;margin-top:20px;fon
     <h3>C-01</h3>
     <div class="dl">
       <div><span>kayıt</span><span>8 (sonuncusu silinmiş)</span></div>
-      <div><span>tanık</span><span>5 — kimlik yok</span></div>
+      <div><span>tanık</span><span>5 — motor kulübü</span></div>
       <div><span>boşluk</span><span>4 ay — sebep yazılmamış</span></div>
-      <div><span>kapsama</span><span>%0</span></div>
-      <div><span>görüntü</span><span>0 kare</span></div>
-      <div><span>ses</span><span>3 kanal / 1 kanal kayıp</span></div>
+      <div><span>kapsama</span><span>%6</span></div>
+      <div><span>görüntü</span><span>6 kare</span></div>
+      <div><span>video</span><span>yok — kanal açılmadı</span></div>
       <div><span>imza</span><span>yok</span></div>
       <div><span>durum</span><span>kapalı</span></div>
     </div>
@@ -777,12 +765,13 @@ var BOOT=[
 var STREAM=[
   {m:"konu dizini açıldı: C-01", c:""},
   {m:"son gözlem tarihi: 2026-11-02 — bugün", c:""},
-  {m:"görüntü kanalı yok. kare üretilmedi.", c:"warn"},
+  {m:"görüntü kanalı açıldı. 6 kare alındı.", c:""},
+  {m:"video kanalı yok. kamera erişimi verilmedi.", c:"warn"},
   {m:"boşluk kaydı tarandı: 4 ay, sebep alanı boş", c:"warn"},
   {m:"tekrar yazım tespit edildi: REC-04 (3 kopya)", c:"warn"},
   {m:"soru cevapsız bırakıldı (SORU 01..08)", c:"q"},
-  {m:"tanık ifadeleri 5 adet — hiçbirinde kimlik yok", c:""},
-  {m:"ses kanalları: 3 dolu, 1 kayıp", c:"warn"},
+  {m:"motor kulübü tanıkları: KEREM, ARDA, EFE, MERT, BERK", c:""},
+  {m:"satır eklendi: \"LGS burada mı?\" — cevap bekleniyor", c:"q"},
   {m:"imza alanı boş. dosya yine de açık.", c:""},
   {m:"sonraki gözlem zamanı hesaplanamadı", c:"q"},
   {m:"C-01 hâlâ burada.", c:""}
@@ -843,10 +832,6 @@ document.querySelectorAll(".frame img").forEach(function(img){
   img.addEventListener("error",function(){ img.closest(".frame").classList.add("lost"); });
   img.addEventListener("load",function(){ img.closest(".frame").classList.remove("lost"); });
 });
-document.querySelectorAll(".acard video").forEach(function(v){
-  v.addEventListener("error",function(){ v.closest(".acard").classList.add("lost"); });
-  v.addEventListener("loadeddata",function(){ v.closest(".acard").classList.remove("lost"); });
-});
 
 /* ---------------- LIGHTBOX ---------------- */
 var lb=document.getElementById("lb"), lbi=document.getElementById("lbi"), lbl=document.getElementById("lbl");
@@ -873,16 +858,22 @@ lb.addEventListener("click",function(e){ if(e.target===lb) lb.classList.remove("
 /* ---------------- ARŞİV ARAMA ---------------- */
 var AR={
   "c-01":"Konu kodu C-01 dosyanın her yerinde geçiyor. 8 kayıt, 5 tanık, 4 aylık boşluk hepsi buna bağlı.",
-  "cinar":"0 eşleşme. Bu dosyada «ÇINAR» geçmiyor. Konu koduyla kaydedilmiş: C-01.",
-  "çınar":"0 eşleşme. Bu dosyada «ÇINAR» geçmiyor. Konu koduyla kaydedilmiş: C-01.",
-  "ulaşın":"0 eşleşme. «ULAŞIN» da dosyada yok. Sadece C-01 ve sekiz kayıt var.",
-  "c01":"C-01 → 8 kayıt, 5 tanık, 4 ay boşluk, imza yok.",
+  "cinar":"ÇINAR dosyada 4 kez geçiyor: başlık, REC-08, LGS kaydı ve tanık ifadeleri.",
+  "çınar":"ÇINAR dosyada 4 kez geçiyor: başlık, REC-08, LGS kaydı ve tanık ifadeleri.",
+  "ulaşın":"ULAŞIN sadece başlıkta geçiyor. Gözlem kayıtlarında isim yok, orada C-01 yazıyor.",
+  "motor":"Motor Kulübü bölümünde 5 tanık: KEREM, ARDA, EFE, MERT, BERK. Hepsi motor kulübünden.",
+  "kerem":"TANIK 01 — KEREM: «Çınar gerçekten iyi bir arkadaş... motora bindirirsin ve yolun hiç bitmez.»",
+  "arda":"TANIK 02 — ARDA: «Seninle yol yapmak başka... Yani motor senin, yol senin.»",
+  "efe":"TANIK 03 — EFE: «Motorsuz olmuyor bu arkadaşlık. Motorsuz olmuyor, o yüzden motor şart.»",
+  "mert":"TANIK 04 — MERT: «Benim en iyi arkadaşım. Başka da bu kadar iyi arkadaş yok.»",
+  "berk":"TANIK 05 — BERK: «Her şeyi seninle yapmak isterim. Motor da, yol da, her şey.»",
+  "lgs":"LGS Kaydı bölümü. 2 Kasım 2026, 21:47. Satır: «LGS burada mı?» Cevap yazılmadı.",
   "boşluk":"REC-06: 2023-04-01 → 2023-08-01. Dört ay. Sebep alanı boş bırakılmış.",
-  "ses":"REC-03: tek ses kaydı, kimseye atfedilmemiş. Ayrıca 3 dolu / 1 kayıp kanal.",
-  "imza":"Hiçbir kayıtta imza yok. Tanıklar için de 'kimlik: kayıt dışı' yazıyor.",
-  "imza yok":"Hiçbir kayıtta imza yok. Tanıklar için de 'kimlik: kayıt dışı' yazıyor.",
+  "imza":"Hiçbir kayıtta imza yok. Tanıklar için de 'imza yok' yazıyor.",
   "soru":"8 soru var: SORU 01 … SORU 08. Hiçbirinin cevabı dosyada yok.",
-  "görüntü":"Kapsama %0. Görüntü dosyası yok. Boş kareler boş bırakıldı."
+  "görüntü":"Kapsama %6. Altı kare, hepsi C-01. Fotoğraf kanalı açıldı.",
+  "video":"Video kanalı yok. Dosyada video kaydı alınmamış — kameraya erişim yoktu.",
+  "fotoğraf":"Altı kare. Motorun üstünde, ayakta, kırmızı ışıkta, içeride, takım elbiseyle, kanepede."
 };
 function doSearch(){
   var q=(document.getElementById("q").value||"").trim().toLowerCase();
@@ -1056,7 +1047,7 @@ window.C01={
   close:closeTerminal,
   records:RECORDS,
   arsiv:AR,
-  subject:function(){ return {konu:"C-01", kayit:8, tanik:5, bosluk_ay:4, kapsama:0, imza:null}; },
+  subject:function(){ return {konu:"C-01", kayit:8, tanik:5, bosluk_ay:4, kapsama:6, video:0, imza:null}; },
   kapat:openOverlay,
   kayit:function(n){ streamLine({m:n||"manuel kayit eklendi", c:"warn"}); }
 };

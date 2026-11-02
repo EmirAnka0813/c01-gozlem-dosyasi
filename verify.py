@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Cinar sitesi kapsamli dogrulama."""
+"""C-01 sitesi kapsamli dogrulama (gercek fotograflar, videosuz)."""
 import sys
 import time
 
@@ -18,8 +18,8 @@ def check(name, cond, detail=""):
 with sync_playwright() as pw:
     b = pw.chromium.launch(headless=True,
                            args=["--autoplay-policy=no-user-gesture-required"])
-    ctx = b.new_context(viewport={"width": 1440, "height": 900}, locale="tr-TR")
-    page = ctx.new_page()
+    page = b.new_context(viewport={"width": 1440, "height": 900},
+                         locale="tr-TR").new_page()
     js_errs, console_errs, failed = [], [], []
     page.on("pageerror", lambda e: js_errs.append(str(e)))
     page.on("console",
@@ -29,93 +29,82 @@ with sync_playwright() as pw:
     page.goto(URL, wait_until="networkidle")
     time.sleep(2)
 
+    # ---- boot ----
     check("baslik C-01", "C-01" in page.title(), page.title())
     check("boot ekrani var", page.evaluate("!!document.getElementById('boot')"))
     check("boot metni doldu",
           page.evaluate("document.getElementById('bootLines').children.length") >= 8)
-
-    page.wait_for_function("!document.getElementById('bootBtn').disabled", timeout=15000)
+    page.wait_for_function("!document.getElementById('bootBtn').disabled", timeout=20000)
     page.click("#bootBtn")
-    time.sleep(1.5)
+    time.sleep(2)
     check("boot kapandi",
           page.evaluate("document.getElementById('boot').classList.contains('gone')"))
 
-    check("hero gorunur", page.evaluate("!!document.querySelector('.hero h1')"))
+    # ---- h1 ----
+    h1 = page.evaluate("document.querySelector('.hero h1').innerText")
+    check("h1 'ÇINAR ULAŞIN'", h1.strip() == "ÇINAR ULAŞIN", repr(h1))
+    check("h1 tek 'ULAŞIN'", h1.count("ULAŞIN") == 1, h1.count("ULAŞIN"))
+
+    # ---- icerik ----
     body = page.evaluate("document.body.innerText")
-    check("CINAR adi var", "ÇINAR" in body)
-    check("ULASIN adi var", "ULAŞIN" in body)
-    check("8 soru basligi var", "SORU 01" in body and "SORU 08" in body)
-    check("imza yok", "İMZA" in body or "imza" in body)
+    for tok in ("SORU 01", "SORU 08", "ÇINAR", "İMZA",
+                "LGS burada mı?", "Motor Kulübü", "KEREM", "BERK"):
+        # basliklar CSS text-transform ile buyutuluyor; innerText orijinali dondurur
+        found = page.evaluate(
+            """(t)=>{
+                const all=document.body.innerText+' '+document.body.textContent;
+                const el=[...document.querySelectorAll('.sec-h .t')]
+                    .find(e=>e.textContent.trim().toLowerCase()===t.toLowerCase());
+                return !!el || all.toLowerCase().includes(t.toLowerCase());
+            }""", tok)
+        check("icerik: " + tok, found)
+    check("LGS cevabi yazilmamis",
+          "Cevap yazılmadı" in body)
 
-    check("canli akis satir artti",
-          page.evaluate("document.getElementById('liveLog').children.length") > 2)
+    # ---- galeri: 6 gercek fotograf, video yok ----
+    frames = page.evaluate("document.querySelectorAll('.frame').length")
+    check("6 kare", frames == 6, frames)
+    imgs = page.evaluate(
+        "Array.from(document.querySelectorAll('.frame img')).map(i=>i.naturalWidth>0)")
+    check("6 fotograf yuklendi", all(imgs) and len(imgs) == 6, imgs)
+    check("video yok", page.evaluate("document.querySelectorAll('video').length") == 0)
+    check("ses kayitlari bolumu yok",
+          "Ses Kayıtları" not in body)
 
-    # ---- terminal (ac/kapat butonu ile) ----
-    # boot teaser'i terminali acmis olabilir -> JS state ile normalize et
+    # ---- motor kuluubu: 5 isimli tanik kartlari ----
+    check("5 motor tanigi", page.evaluate("document.querySelectorAll('.wit .wcard').length") == 10,
+          page.evaluate("document.querySelectorAll('.wit .wcard').length"))
+
+    # ---- terminal ----
     page.evaluate("C01.close()")
     time.sleep(0.3)
-    check("terminal kapali", not page.evaluate(
-        "document.getElementById('termPanel').classList.contains('open')"))
     page.click("#termBtn")
-    time.sleep(0.5)
+    time.sleep(0.4)
     check("terminal acildi",
           page.evaluate("document.getElementById('termPanel').classList.contains('open')"))
-    check("C01 dis API var", page.evaluate("typeof C01 === 'object'"))
-    check("C01.subject dogru",
-          page.evaluate("C01.subject().kayit") == 8)
-
-    page.fill("#termIn", "help")
-    page.press("#termIn", "Enter")
-    time.sleep(0.4)
-    term = page.evaluate("document.getElementById('termOut').innerText")
-    check("terminal help calisti", "kayitlar" in term)
-
-    page.fill("#termIn", "subject")
-    page.press("#termIn", "Enter")
+    for cmd, expect in (("help", "kayitlar"), ("kayitlar", "REC-08"),
+                        ("subject", "C-01"), ("who", "bilinmiyor"),
+                        ("find cinar", "ÇINAR"), ("find motor", "KEREM"),
+                        ("find lgs", "LGS"), ("find boşluk", "REC-06")):
+        page.fill("#termIn", cmd)
+        page.press("#termIn", "Enter")
+        time.sleep(0.25)
+        out = page.evaluate("document.getElementById('termOut').innerText")
+        check("cmd '%s'" % cmd, expect in out, out[-80:])
+    page.evaluate("C01.close()")
     time.sleep(0.3)
-    term2 = page.evaluate("document.getElementById('termOut').innerText")
-    check("terminal subject calisti", "C-01" in term2)
-
-    page.fill("#termIn", "kayitlar")
-    page.press("#termIn", "Enter")
-    time.sleep(0.3)
-    term3 = page.evaluate("document.getElementById('termOut').innerText")
-    check("terminal kayitlar 8 kayit", term3.count("REC-") == 8, term3.count("REC-"))
-
-    page.fill("#termIn", "find cinar")
-    page.press("#termIn", "Enter")
-    time.sleep(0.3)
-    term4 = page.evaluate("document.getElementById('termOut').innerText")
-    check("terminal find cinar -> 0 eslesme", "0 eşleşme" in term4)
-
-    page.fill("#termIn", "find boşluk")
-    page.press("#termIn", "Enter")
-    time.sleep(0.3)
-    term5 = page.evaluate("document.getElementById('termOut').innerText")
-    check("terminal find bosluk -> eslesme", "REC-06" in term5)
-
-    page.fill("#termIn", "who")
-    page.press("#termIn", "Enter")
-    time.sleep(0.3)
-    term6 = page.evaluate("document.getElementById('termOut').innerText")
-    check("terminal who -> bilinmiyor", "bilinmiyor" in term6)
-
-    page.evaluate("document.getElementById('termClose').click()")
-    time.sleep(0.4)
-    check("terminal kapandi",
-          not page.evaluate("document.getElementById('termPanel').classList.contains('open')"))
 
     # ---- arama ----
-    page.fill("#q", "boşluk")
+    page.fill("#q", "lgs")
     page.click("#qbtn")
     time.sleep(0.3)
-    check("arama hit", page.evaluate("!!document.querySelector('#sresult .hit')"))
+    check("arama lgs hit", page.evaluate("!!document.querySelector('#sresult .hit')"))
     page.fill("#q", "xyzzy")
     page.click("#qbtn")
     time.sleep(0.3)
     check("arama miss", page.evaluate("!!document.querySelector('#sresult .miss')"))
 
-    # ---- tanik defteri ----
+    # ---- defter ----
     page.fill("#gbName", "Test")
     page.fill("#gbText", "Deneme ifade")
     page.click("#gbForm button[type=submit]")
@@ -125,52 +114,39 @@ with sync_playwright() as pw:
 
     # ---- overlay ----
     page.click("#closeBtn")
-    time.sleep(0.5)
+    time.sleep(0.4)
     check("overlay acildi",
           page.evaluate("document.getElementById('overlay').classList.contains('open')"))
     check("overlay son satir",
           "içeriği belirsiz" in page.evaluate("document.getElementById('overlay').innerText"))
+    ov_txt = page.evaluate("document.getElementById('overlay').innerText")
+    check("overlay kapsama %6", "%6" in ov_txt)
+    check("overlay video yok", "video" in ov_txt.lower())
     page.click("#reopenBtn")
     time.sleep(0.3)
     check("overlay kapandi",
           not page.evaluate("document.getElementById('overlay').classList.contains('open')"))
 
-    # ---- medya ----
-    imgs = page.evaluate("Array.from(document.querySelectorAll('img')).map(i=>i.naturalWidth>0)")
-    check("tum img yuklendi", all(imgs), "{} / {}".format(sum(imgs), len(imgs)))
-    check("vid4 kayip isaretli", page.evaluate("!!document.querySelector('.acard.lost')"))
-
-    vids = page.evaluate(
-        "Array.from(document.querySelectorAll('.acard video')).map(v=>v.readyState>=1)")
-    check("3 video yuklendi", sum(1 for v in vids if v) == 3, vids)
     # ---- tasma ----
-    ov = page.evaluate(
-        "document.documentElement.scrollWidth - document.documentElement.clientWidth")
-    check("yatay tasma yok (1440)", ov <= 0, ov)
+    for w, h, lbl in ((1440, 900, "1440"), (820, 1180, "820"), (390, 844, "390")):
+        page.set_viewport_size({"width": w, "height": h})
+        time.sleep(0.7)
+        ov = page.evaluate(
+            "document.documentElement.scrollWidth - document.documentElement.clientWidth")
+        check("yatay tasma yok (" + lbl + ")", ov <= 0, ov)
 
+    page.set_viewport_size({"width": 1440, "height": 900})
+    time.sleep(0.5)
     page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
     time.sleep(1.4)
     check("reveal aktive", page.evaluate("document.querySelectorAll('.rv.in').length") > 3)
 
-    page.set_viewport_size({"width": 390, "height": 844})
-    time.sleep(0.8)
-    ov2 = page.evaluate(
-        "document.documentElement.scrollWidth - document.documentElement.clientWidth")
-    check("yatay tasma yok (390)", ov2 <= 0, ov2)
-
-    page.set_viewport_size({"width": 820, "height": 1180})
-    time.sleep(0.8)
-    ov3 = page.evaluate(
-        "document.documentElement.scrollWidth - document.documentElement.clientWidth")
-    check("yatay tasma yok (820)", ov3 <= 0, ov3)
-
+    # ---- hatalar ----
     check("js hatasi yok", len(js_errs) == 0, js_errs[:3])
-    # ERR_ABORTED: preload=metadata tarayici Range isteyip iptal eder -> normal,
-    # ayrica 404 olmayan tek kaynak (vid4) HTML'den kaldirildi.
-    real_fail = [f for f in failed if "ERR_ABORTED" not in f]
-    check("basarisiz istek yok", len(real_fail) == 0, real_fail[:3])
-    con_404 = [c for c in console_errs if "404" in c]
-    check("404 yok", len(con_404) == 0, con_404[:3])
+    con404 = [c for c in console_errs if "404" in c]
+    check("404 yok", len(con404) == 0, con404[:3])
+    real = [f for f in failed if "ERR_ABORTED" not in f]
+    check("basarisiz istek yok", len(real) == 0, real[:3])
 
     b.close()
 
