@@ -1,0 +1,8 @@
+# gecici dogrulama gorselleri
+shot_*.png
+h1_only.png
+final_*.png
+
+# python
+__pycache__/
+*.pyc
