@@ -30,11 +30,15 @@ with sync_playwright() as pw:
     page = b.new_context(viewport={"width": 1440, "height": 900},
                          locale="tr-TR").new_page()
     js_errs, console_errs, failed = [], [], []
+    mp3_responses = []
     page.on("pageerror", lambda e: js_errs.append(str(e)))
     page.on("console",
             lambda m: console_errs.append(m.text) if m.type == "error" else None)
     page.on("requestfailed",
             lambda r: failed.append(r.url.split("/")[-1] + " :: " + str(r.failure)))
+    page.on("response",
+            lambda r: mp3_responses.append((r.url.split("/")[-1], r.status))
+            if "hayko.mp3" in r.url else None)
     page.goto(URL, wait_until="networkidle")
     time.sleep(2)
 
@@ -142,6 +146,9 @@ with sync_playwright() as pw:
     check("UYAAAAAN metni",
           page.evaluate("document.getElementById('uya').textContent.trim()") == "UYAAAAAN")
     check("C01.hayko API", page.evaluate("typeof C01.hayko === 'function'"))
+    check("duman katmani var", page.evaluate("!!document.getElementById('smoke')"))
+    check("duman silahi var (muzzle)", page.evaluate("!!document.getElementById('muzzle')"))
+    check("07 LGS butonu var", page.evaluate("!!document.getElementById('lgsBtn')"))
 
     page.evaluate("C01.hayko()")
     time.sleep(1.2)
@@ -149,30 +156,52 @@ with sync_playwright() as pw:
         "document.getElementById('finale').classList.contains('open')"))
     check("player gorunur", page.evaluate(
         "document.getElementById('player').classList.contains('on')"))
-    check("hayko.mp3 yuklendi", page.evaluate("""()=>{
-        const a=[...performance.getEntriesByType('resource')]
-                 .filter(r=>r.name.includes('hayko.mp3'));
-        return a.length>0 && a[0].responseStatus>=200 && a[0].responseStatus<400;
-    }"""))
+    # NOT: performance.getEntriesByType('resource') media element'leri
+    # (mp3) guvenilir sekilde raporlamaz -> response listener kullanilir.
+    # mp3 200 dondu mu (response listener ile)
+    check("mp3 200 dondu", any(
+        u.endswith("hayko.mp3") and s == 200 for (u, s) in mp3_responses),
+        mp3_responses)
     check("scroll kilitli", page.evaluate("document.body.style.overflow") == "hidden")
+    check("duman henuz yok", not page.evaluate(
+        "document.getElementById('smoke').classList.contains('on')"))
 
     time.sleep(2.6)
     check("uya animasyonu", page.evaluate(
         "document.getElementById('uya').classList.contains('go')"))
     check("flash tetiklendi", page.evaluate(
         "document.getElementById('flash').classList.contains('go')"))
+    check("namlu dumani animasyonu", page.evaluate("""()=>{
+        const m=document.getElementById('muzzle');
+        return m && m.style.animation && m.style.animation.includes('muzzlePuff');
+    }"""))
 
-    time.sleep(2.6)
-    check("alt satir gorunur", page.evaluate(
-        "document.getElementById('sub').classList.contains('on')"))
-    check("gec butonu gorunur", page.evaluate(
-        "document.getElementById('skip').classList.contains('on')"))
+    time.sleep(1.6)
+    check("duman bastladi", page.evaluate(
+        "document.getElementById('smoke').classList.contains('on')"))
+    check("uya over modu", page.evaluate(
+        "document.getElementById('uya').classList.contains('over')"))
+    smoke_op = page.evaluate(
+        "parseFloat(getComputedStyle(document.getElementById('smoke')).opacity)")
+    check("duman opakligi yukseliyor", smoke_op > 0.3, smoke_op)
 
-    page.evaluate("document.getElementById('skip').click()")
-    time.sleep(0.6)
-    check("finale kapandi", not page.evaluate(
+    # 5 sn sonra geri basa donus
+    time.sleep(4.2)
+    check("duman bitti, finale kapandi", not page.evaluate(
         "document.getElementById('finale').classList.contains('open')"))
     check("scroll kilidi kalkti", page.evaluate("document.body.style.overflow") == "")
+    check("sayfa basa dondu", page.evaluate("window.scrollY") < 50,
+          page.evaluate("window.scrollY"))
+
+    # 07 butonu finali tetikler
+    page.evaluate("document.getElementById('lgsBtn').click()")
+    time.sleep(1)
+    check("07 butonu finali acti", page.evaluate(
+        "document.getElementById('finale').classList.contains('open')"))
+    page.evaluate("document.getElementById('skip').click()")
+    time.sleep(0.5)
+    check("gec ile finale kapandi", not page.evaluate(
+        "document.getElementById('finale').classList.contains('open')"))
 
     # overlay -> finale otomatik akis
     page.evaluate("C01.kapat()")
