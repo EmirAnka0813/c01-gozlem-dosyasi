@@ -37,19 +37,33 @@ with sync_playwright() as pw:
     page.on("requestfailed",
             lambda r: failed.append(r.url.split("/")[-1] + " :: " + str(r.failure)))
     page.on("response",
-            lambda r: mp3_responses.append((r.url.split("/")[-1], r.status))
+            lambda r: (mp3_responses.append((r.url.split("/")[-1], r.status)),
+                       page.evaluate("window.__mp3Ok=true")
+                       if "hayko.mp3" in r.url and r.status in (200, 206) else None)
             if "hayko.mp3" in r.url else None)
     page.goto(URL, wait_until="networkidle")
     time.sleep(2)
+    page.wait_for_function("!document.getElementById('bootBtn').disabled", timeout=25000)
+    page.click("#bootBtn")
+    time.sleep(1.5)
 
-    # ---- boot ----
+    # ---- MP3: finalden ONCE dogrula ----
+    # mp3 4.6MB; canli sunucuda yuklenmesi birkac saniye surebilir.
+    # Kontrol finalden once yapilir ki finalin zamanlamasi kaymasin.
+    page.evaluate("C01.hayko()")
+    try:
+        page.wait_for_function("()=>window.__mp3Ok===true", timeout=25000)
+    except Exception:
+        pass
+    check("mp3 200/206 dondu", any(
+        u.endswith("hayko.mp3") and s in (200, 206) for (u, s) in mp3_responses),
+        mp3_responses)
+
+    # ---- boot (yukarida acildi) ----
     check("baslik C-01", "C-01" in page.title(), page.title())
     check("boot ekrani var", page.evaluate("!!document.getElementById('boot')"))
     check("boot metni doldu",
           page.evaluate("document.getElementById('bootLines').children.length") >= 8)
-    page.wait_for_function("!document.getElementById('bootBtn').disabled", timeout=20000)
-    page.click("#bootBtn")
-    time.sleep(2)
     check("boot kapandi",
           page.evaluate("document.getElementById('boot').classList.contains('gone')"))
 
@@ -150,23 +164,18 @@ with sync_playwright() as pw:
     check("duman silahi var (muzzle)", page.evaluate("!!document.getElementById('muzzle')"))
     check("07 LGS butonu var", page.evaluate("!!document.getElementById('lgsBtn')"))
 
+    # finale yeni baslat (mp3 kontrolunden sonra, temiz zamanlama)
     page.evaluate("C01.hayko()")
-    time.sleep(1.2)
+    time.sleep(1.0)
     check("finale acik", page.evaluate(
         "document.getElementById('finale').classList.contains('open')"))
     check("player gorunur", page.evaluate(
         "document.getElementById('player').classList.contains('on')"))
-    # NOT: performance.getEntriesByType('resource') media element'leri
-    # (mp3) guvenilir sekilde raporlamaz -> response listener kullanilir.
-    # mp3 200 dondu mu (response listener ile)
-    check("mp3 200 dondu", any(
-        u.endswith("hayko.mp3") and s == 200 for (u, s) in mp3_responses),
-        mp3_responses)
     check("scroll kilitli", page.evaluate("document.body.style.overflow") == "hidden")
     check("duman henuz yok", not page.evaluate(
         "document.getElementById('smoke').classList.contains('on')"))
 
-    time.sleep(2.6)
+    time.sleep(2.8)
     check("uya animasyonu", page.evaluate(
         "document.getElementById('uya').classList.contains('go')"))
     check("flash tetiklendi", page.evaluate(
@@ -176,7 +185,7 @@ with sync_playwright() as pw:
         return m && m.style.animation && m.style.animation.includes('muzzlePuff');
     }"""))
 
-    time.sleep(1.6)
+    time.sleep(1.4)
     check("duman bastladi", page.evaluate(
         "document.getElementById('smoke').classList.contains('on')"))
     check("uya over modu", page.evaluate(
@@ -186,7 +195,7 @@ with sync_playwright() as pw:
     check("duman opakligi yukseliyor", smoke_op > 0.3, smoke_op)
 
     # 5 sn sonra geri basa donus
-    time.sleep(4.2)
+    time.sleep(4.4)
     check("duman bitti, finale kapandi", not page.evaluate(
         "document.getElementById('finale').classList.contains('open')"))
     check("scroll kilidi kalkti", page.evaluate("document.body.style.overflow") == "")
