@@ -6,3 +6,11 @@ final_*.png
 # python
 __pycache__/
 *.pyc
+# gecici uretim dosyalari
+_hayko_tmp*
+_vtest*
+_kw/
+sheet.png
+figwrap.png
+full.png
+hk_*
