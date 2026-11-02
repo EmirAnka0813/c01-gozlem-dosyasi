@@ -1283,6 +1283,7 @@ function openOverlay(){
 }
 document.getElementById("closeBtn").addEventListener("click",openOverlay);
 document.getElementById("reopenBtn").addEventListener("click",function(){
+  clearTimeout(overlayTimer);          /* "yine ac" -> finali iptal et */
   ov.classList.remove("open"); beep(760,0.07,0.03);
 });
 

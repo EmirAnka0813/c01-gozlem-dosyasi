@@ -1,5 +1,14 @@
 # -*- coding: utf-8 -*-
-"""C-01 sitesi kapsamli dogrulama (gercek fotograflar, videosuz)."""
+"""C-01 Gozlem Dosyasi - kanonik dogrulama.
+
+Kullanim:
+    python verify.py <url>
+
+Varsayilan: http://127.0.0.1:8099/index.html
+Kapsam: boot, h1 a11y, icerik, 6 fotograf + video yok, motor kuluubu (5 isim),
+LGS kaydi, terminal komutlari, arama, tanik defteri, overlay,
+Hayko Cepkin finali (siluet/UYAAAAAN/mp3/GEÇ), yatay tasma, js hatasi, 404.
+"""
 import sys
 import time
 
@@ -126,6 +135,57 @@ with sync_playwright() as pw:
     time.sleep(0.3)
     check("overlay kapandi",
           not page.evaluate("document.getElementById('overlay').classList.contains('open')"))
+
+    # ---- HAYKO CEPKIN FINALE ----
+    check("finale DOM'da", page.evaluate("!!document.getElementById('finale')"))
+    check("siluet SVG var", page.evaluate("!!document.getElementById('fig')"))
+    check("UYAAAAAN metni",
+          page.evaluate("document.getElementById('uya').textContent.trim()") == "UYAAAAAN")
+    check("C01.hayko API", page.evaluate("typeof C01.hayko === 'function'"))
+
+    page.evaluate("C01.hayko()")
+    time.sleep(1.2)
+    check("finale acik", page.evaluate(
+        "document.getElementById('finale').classList.contains('open')"))
+    check("player gorunur", page.evaluate(
+        "document.getElementById('player').classList.contains('on')"))
+    check("hayko.mp3 yuklendi", page.evaluate("""()=>{
+        const a=[...performance.getEntriesByType('resource')]
+                 .filter(r=>r.name.includes('hayko.mp3'));
+        return a.length>0 && a[0].responseStatus>=200 && a[0].responseStatus<400;
+    }"""))
+    check("scroll kilitli", page.evaluate("document.body.style.overflow") == "hidden")
+
+    time.sleep(2.6)
+    check("uya animasyonu", page.evaluate(
+        "document.getElementById('uya').classList.contains('go')"))
+    check("flash tetiklendi", page.evaluate(
+        "document.getElementById('flash').classList.contains('go')"))
+
+    time.sleep(2.6)
+    check("alt satir gorunur", page.evaluate(
+        "document.getElementById('sub').classList.contains('on')"))
+    check("gec butonu gorunur", page.evaluate(
+        "document.getElementById('skip').classList.contains('on')"))
+
+    page.evaluate("document.getElementById('skip').click()")
+    time.sleep(0.6)
+    check("finale kapandi", not page.evaluate(
+        "document.getElementById('finale').classList.contains('open')"))
+    check("scroll kilidi kalkti", page.evaluate("document.body.style.overflow") == "")
+
+    # overlay -> finale otomatik akis
+    page.evaluate("C01.kapat()")
+    time.sleep(0.6)
+    check("overlay acildi", page.evaluate(
+        "document.getElementById('overlay').classList.contains('open')"))
+    time.sleep(2.6)
+    check("finale otomatik acildi", page.evaluate(
+        "document.getElementById('finale').classList.contains('open')"))
+    page.keyboard.press("Escape")
+    time.sleep(0.5)
+    check("ESC finali kapatti", not page.evaluate(
+        "document.getElementById('finale').classList.contains('open')"))
 
     # ---- tasma ----
     for w, h, lbl in ((1440, 900, "1440"), (820, 1180, "820"), (390, 844, "390")):
