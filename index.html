@@ -301,7 +301,7 @@ section{position:relative;z-index:2}
   mix-blend-mode:overlay;
 }
 
-/* siluet: devasa, karanlik, ekrani kaplayan figur */
+/* siluet: koyu govde, parlak kenar ışigi (referans: siyah figur, sisli arka plan) */
 #fig{
   position:relative;z-index:2;width:min(78vw,520px);aspect-ratio:.62;
   filter:drop-shadow(0 0 60px rgba(255,180,84,.12));
@@ -318,6 +318,14 @@ section{position:relative;z-index:2}
   position:absolute;z-index:1;width:min(92vw,720px);aspect-ratio:1;border-radius:50%;
   background:radial-gradient(circle,rgba(255,180,84,.16) 0%,rgba(255,180,84,.05) 42%,transparent 68%);
   animation:haloPulse 5.5s ease-in-out infinite;
+}
+/* referans: sisli arka plan. ::before yerine ayri katman ->
+   pseudo-element figurun USTUNE biniyordu. */
+#fog{
+  position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 65% 50% at 50% 40%,rgba(168,180,186,.16) 0%,rgba(96,110,118,.08) 46%,transparent 72%),
+    radial-gradient(ellipse 110% 80% at 50% 118%,rgba(70,84,92,.12) 0%,transparent 62%);
 }
 @keyframes haloPulse{0%,100%{opacity:.65;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
 /* uyari metni */
@@ -776,21 +784,23 @@ footer .stamp{border:1px solid var(--line);padding:14px 16px;margin-top:20px;fon
 
 <!-- ============ HAYKO CEPKIN FINALE ============ -->
 <div id="finale">
+  <div id="fog"></div>
   <canvas id="fcanvas"></canvas>
   <div id="halo"></div>
 
   <svg id="fig" viewBox="0 0 300 480" aria-label="Hayko Cepkin silueti">
     <defs>
       <linearGradient id="gBody" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#33404a"/>
-        <stop offset="42%" stop-color="#141b21"/>
-        <stop offset="100%" stop-color="#04070a"/>
+        <stop offset="0%" stop-color="#93a3ae"/>
+        <stop offset="24%" stop-color="#455560"/>
+        <stop offset="58%" stop-color="#1c252c"/>
+        <stop offset="100%" stop-color="#080c10"/>
       </linearGradient>
       <linearGradient id="gEdge" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="#ffb454" stop-opacity=".95"/>
-        <stop offset="26%" stop-color="#ffb454" stop-opacity=".12"/>
-        <stop offset="74%" stop-color="#5ef2a0" stop-opacity=".12"/>
-        <stop offset="100%" stop-color="#5ef2a0" stop-opacity=".8"/>
+        <stop offset="0%" stop-color="#fff0d6" stop-opacity="1"/>
+        <stop offset="20%" stop-color="#ffc169" stop-opacity=".55"/>
+        <stop offset="80%" stop-color="#7ff5bb" stop-opacity=".5"/>
+        <stop offset="100%" stop-color="#c8ffe0" stop-opacity="1"/>
       </linearGradient>
       <filter id="soft"><feGaussianBlur stdDeviation="1.4"/></filter>
       <filter id="rim" x="-30%" y="-30%" width="160%" height="160%">
@@ -798,61 +808,107 @@ footer .stamp{border:1px solid var(--line);padding:14px 16px;margin-top:20px;fon
         <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
       </filter>
     </defs>
-    <!-- govde: hafif kambur, uzun kollu, pantolon -->
-    <path fill="url(#gBody)" stroke="url(#gEdge)" stroke-width="2.2" filter="url(#rim)" d="
-      M150 58
-      C 176 58 192 74 194 98
-      C 196 118 192 128 188 140
-      C 196 156 202 186 206 220
-      C 211 262 214 306 214 344
-      C 214 372 210 400 206 424
-      L 174 428
-      C 170 396 166 356 162 320
-      C 158 356 154 396 150 428
-      L 118 424
-      C 114 400 110 372 110 344
-      C 110 306 113 262 118 220
-      C 122 186 128 156 136 140
-      C 132 128 128 118 130 98
-      C 132 74 124 58 150 58 Z"/>
-    <!-- kollar: asagi sarkan, uzun -->
-    <path fill="url(#gBody)" stroke="url(#gEdge)" stroke-width="1.4" filter="url(#soft)" d="
-      M128 148 C 108 172 96 214 92 262 C 89 300 90 330 93 352
-      L 112 350 C 110 326 110 300 113 266 C 116 222 126 182 140 158 Z"/>
-    <path fill="url(#gBody)" stroke="url(#gEdge)" stroke-width="1.4" filter="url(#soft)" d="
-      M172 148 C 192 172 204 214 208 262 C 211 300 210 330 207 352
-      L 188 350 C 190 326 190 300 187 266 C 184 222 174 182 160 158 Z"/>
-    <!-- boyun -->
-    <path fill="#0a0f12" d="M140 44 h20 v18 h-20 z"/>
-    <!-- kafa: hayali gorunur ama siluet -->
-    <ellipse cx="150" cy="28" rx="27" ry="31" fill="url(#gBody)" stroke="url(#gEdge)" stroke-width="1.6" filter="url(#soft)"/>
-    <!-- biraktaki sakal/koyu yumak -->
-    <path fill="#05080a" d="M126 34 C 130 56 142 62 150 62 C 158 62 170 56 174 34 C 168 44 132 44 126 34 Z"/>
-    <!-- gozler: tek bir parlak nokta -->
-    <circle cx="141" cy="26" r="2.6" fill="#ffb454" opacity=".9"/>
-    <circle cx="159" cy="26" r="2.6" fill="#ffb454" opacity=".9"/>
-    <!-- omuz hatti -->
-    <path d="M124 146 C 150 138 176 138 196 150" fill="none" stroke="rgba(255,180,84,.22)" stroke-width="1.4"/>
+    <!-- ===== UZUN DAGINIK SAC (govde ile birlestirilmis, dolu kitle) ===== -->
+    <path fill="#131c23" stroke="url(#gEdge)" stroke-width="1.8" d="
+      M150 20
+      C 190 20 212 44 214 80
+      C 216 112 210 138 206 162
+      C 203 192 202 228 204 266
+      C 206 306 205 344 203 378
+      L 170 376
+      C 175 340 175 302 173 264
+      C 171 226 173 192 175 164
+      L 125 164
+      C 127 192 129 226 127 264
+      C 125 302 125 340 130 376
+      L 97 378
+      C 95 344 94 306 96 266
+      C 98 228 97 192 94 162
+      C 90 138 84 112 86 80
+      C 88 44 110 20 150 20 Z"/>
+    <!-- sac telleri: kirpikli, dalgin uclar -->
+    <g stroke="url(#gEdge)" stroke-width="1.1" fill="none" opacity=".55">
+      <path d="M104 92 C 96 150 100 250 108 356"/>
+      <path d="M118 104 C 112 166 116 258 122 350"/>
+      <path d="M196 92 C 204 150 200 250 192 356"/>
+      <path d="M182 104 C 188 166 184 258 178 350"/>
+    </g>
+
+    <!-- govde tabani: gradyanin uzerine duz koyu dolgu (silueti tam kapatir) -->
+    <path fill="#151d24" d="
+      M150 96 C 176 96 194 110 204 128 C 212 144 214 172 215 206
+      C 217 248 218 296 216 340 C 215 366 212 396 208 424
+      L 176 428 C 171 394 166 352 162 316 C 158 352 153 394 148 428
+      L 116 424 C 112 396 109 366 108 340 C 106 296 107 248 110 206
+      C 111 172 112 144 120 128 C 130 110 124 96 150 96 Z"/>
+    <!-- sac tabani -->
+    <path fill="#0e161c" d="
+      M150 20 C 190 20 212 44 214 80 C 216 112 210 138 206 162
+      C 203 192 202 228 204 266 C 206 306 205 344 203 378
+      L 170 376 C 175 340 175 302 173 264 C 171 226 173 192 175 164
+      L 125 164 C 127 192 129 226 127 264 C 125 302 125 340 130 376
+      L 97 378 C 95 344 94 306 96 266 C 98 228 97 192 94 162
+      C 90 138 84 112 86 80 C 88 44 110 20 150 20 Z"/>
+
+    <!-- ===== GOVDE: siyah kiyfet, genis omuz, yukarida sacla birlesir ===== -->
+    <path fill="url(#gBody)" stroke="url(#gEdge)" stroke-width="2.6" filter="url(#rim)" d="
+      M150 96
+      C 176 96 194 110 204 128
+      C 212 144 214 172 215 206
+      C 217 248 218 296 216 340
+      C 215 366 212 396 208 424
+      L 176 428
+      C 171 394 166 352 162 316
+      C 158 352 153 394 148 428
+      L 116 424
+      C 112 396 109 366 108 340
+      C 106 296 107 248 110 206
+      C 111 172 112 144 120 128
+      C 130 110 124 96 150 96 Z"/>
+    <!-- yaka: acik bir yaka hatti -->
+    <path d="M126 138 C 142 148 158 148 174 138" fill="none" stroke="rgba(255,180,84,.3)" stroke-width="1.6"/>
+    <!-- kemer/etek detayi -->
+    <path d="M112 232 C 140 240 162 240 214 230" fill="none" stroke="rgba(255,180,84,.16)" stroke-width="1.2"/>
+
+    <!-- ===== SOL KOL: yuzun yanina kalkiyor (referans poz) ===== -->
+    <path fill="url(#gBody)" stroke="url(#gEdge)" stroke-width="1.8" filter="url(#soft)" d="
+      M126 140
+      C 110 156 100 182 98 206
+      C 97 220 102 230 110 232
+      C 120 234 126 226 124 214
+      C 122 198 126 176 136 158 Z"/>
+    <!-- yumruk: yuzun yaninda -->
+    <ellipse cx="112" cy="222" rx="14" ry="12" fill="#101820" stroke="url(#gEdge)" stroke-width="1.6" filter="url(#soft)"/>
+
+    <!-- ===== SAG KOL: asagi, silahi tutuyor ===== -->
+    <path fill="url(#gBody)" stroke="url(#gEdge)" stroke-width="1.8" filter="url(#soft)" d="
+      M196 142 C 206 166 210 200 210 232 C 210 250 208 258 204 266
+      L 186 262 C 190 248 192 232 190 210 C 188 180 184 158 176 146 Z"/>
+    <!-- silah tutan el -->
+    <ellipse cx="196" cy="266" rx="13" ry="11" fill="#101820" stroke="url(#gEdge)" stroke-width="1.6" filter="url(#soft)"/>
+
+    <!-- ===== KAFA: yuz yana, profil ===== -->
+    <ellipse cx="150" cy="72" rx="25" ry="29" fill="url(#gBody)" stroke="url(#gEdge)" stroke-width="1.8" filter="url(#soft)"/>
+    <!-- profil: burn + cene -->
+    <path fill="#0b1116" d="M173 61 C 181 63 183 72 179 80 C 175 89 168 93 162 93 L 160 80 C 168 78 173 69 173 61 Z"/>
+    <!-- goz: tek parlak nokta -->
+    <circle cx="160" cy="65" r="2.8" fill="#ffb454" opacity=".95"/>
+    <!-- yumrukla birlesen kollar (yuz onu) -->
+    <ellipse cx="118" cy="216" rx="9" ry="8" fill="#141c24" opacity=".9"/>
 
     <!-- ===== DUMAN SILAHI (sag el) ===== -->
-    <!-- namlu: uzun, hafif yukari egik -->
-    <g transform="translate(196 258) rotate(-14)">
-      <rect x="0" y="-7" width="88" height="14" rx="3" fill="#0c1216" stroke="url(#gEdge)" stroke-width="1.8"/>
-      <!-- namlu ucunda namlu agzi -->
-      <rect x="86" y="-10" width="10" height="20" rx="2" fill="#141c22" stroke="url(#gEdge)" stroke-width="1.6"/>
-      <!-- sap -->
-      <path d="M6 6 L6 30 L-4 30 L-4 6 Z" fill="#080d11" stroke="rgba(255,180,84,.3)" stroke-width="1.2"/>
-      <!-- tetik korkulugu -->
-      <path d="M14 7 Q 26 18 20 26" fill="none" stroke="rgba(255,180,84,.34)" stroke-width="1.6"/>
-      <!-- namlu ucundan cikan duman -->
+    <g transform="translate(203 266) rotate(-16)">
+      <rect x="0" y="-6.5" width="86" height="13" rx="3" fill="#0c1216" stroke="url(#gEdge)" stroke-width="1.8"/>
+      <rect x="84" y="-9.5" width="10" height="19" rx="2" fill="#141c22" stroke="url(#gEdge)" stroke-width="1.6"/>
+      <path d="M6 6 L6 29 L-5 29 L-5 6 Z" fill="#080d11" stroke="rgba(255,180,84,.3)" stroke-width="1.2"/>
+      <path d="M14 7 Q 25 17 19 25" fill="none" stroke="rgba(255,180,84,.34)" stroke-width="1.6"/>
+      <!-- namludan cikan duman -->
       <g id="muzzle">
-        <ellipse cx="106" cy="0" rx="22" ry="15" fill="#cfd8dc" opacity=".22"/>
-        <ellipse cx="122" cy="-4" rx="26" ry="17" fill="#e2e9ec" opacity=".16"/>
-        <ellipse cx="140" cy="3" rx="30" ry="19" fill="#cfd8dc" opacity=".11"/>
+        <ellipse cx="104" cy="0" rx="21" ry="14" fill="#cfd8dc" opacity=".22"/>
+        <ellipse cx="120" cy="-4" rx="25" ry="16" fill="#e2e9ec" opacity=".16"/>
+        <ellipse cx="138" cy="3" rx="29" ry="18" fill="#cfd8dc" opacity=".11"/>
       </g>
     </g>
-    <!-- silah tutan el -->
-    <ellipse cx="199" cy="262" rx="13" ry="11" fill="#141c22" stroke="url(#gEdge)" stroke-width="1.4"/>
   </svg>
 
   <div id="uya">UYAAAAAN</div>
